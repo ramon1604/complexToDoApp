@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 const path = require('path')
 
-//Global constants
+//Load globals 
 require(path.join(__dirname, 'globals'))
 
 // External files
