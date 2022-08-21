@@ -1,3 +1,4 @@
+const { response } = require('express')
 const path = require('path')
 const User = require(path.join(appRoot, 'tables/User'))
 
@@ -5,23 +6,13 @@ exports.home = (req, res) => {
     res.render('home-guest')
 }
 
-exports.register = (req, res) => {
+exports.register = async (req, res) => {
     let user = new User(req.body)
-    user.register().then((result) => {
-        res.send(result)
-    }).catch((error) => {
-        user.errors.push(error)
-        res.send(user.errors)
-    })
+    if (await user.register()) { res.send('Register successful') } else { res.send(user.errors) }
 }
 
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
     let user = new User(req.body)
-    user.login().then((result) => {
-        res.send(result)
-    }).catch((error) => {
-        user.errors.push(error)
-        res.send(user.errors)
-    })
+    if (await user.login()) { res.send('Login successful') } else { res.send(user.errors) }
 }
 

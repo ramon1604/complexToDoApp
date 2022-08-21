@@ -1,4 +1,5 @@
 const validator = require('validator')
+const bcrypt = require('bcryptjs')
 
 let User = function (data) {
     this.data = data
@@ -29,39 +30,43 @@ User.prototype.validate = function () {
     if (this.data.username > 20) { this.errors.push('Username can not exceed 20 characters.') }
 }
 
-User.prototype.register = function () {
-    return new Promise((resolve, reject) => {
+User.prototype.register = async function () {
+    try {
         this.cleanUp()
         this.validate()
         if (!this.errors.length) {
-            db.collection("users").findOne({ username: this.data.username }).then((user) => {
-                if (!user) {
-                    db.collection("users").insertOne(this.data).then((inserted) => {
-                        resolve("Registration successful.")
-                    }).catch((error) => {
-                        reject(error)
-                    })
-                } else {    
-                    reject("Username already exists.")
-                }
-            }).catch((error) => { reject(error) })
+            const user = await db.collection("users").findOne({ username: this.data.username })
+            if (!user) {
+                let salt = bcrypt.genSaltSync(10)
+                this.data.password = bcrypt.hashSync(this.data.password, salt)
+                const insertedUser = await db.collection("users").insertOne(this.data)
+                return insertedUser
+            } else {
+                this.errors.push('Username already exists.')
+                return false
+            }
         } else {
-            reject("Validation errors encountered.")
+            this.errors.push("Validation errors encountered.")
+            return false
         }
-    })
+    } catch (error) {
+        console.log(error)
+    }
 }
 
-User.prototype.login = function () {
-    return new Promise((resolve, reject) => {
+User.prototype.login = async function () {
+    try {
         this.cleanUp()
-        db.collection("users").findOne({ username: this.data.username, password: this.data.password }, (err, user) => {
-            if (!user) {
-                reject("Login failed.")
-            } else {
-                resolve("Login successful.")
-            }
-        })
-    })
+        const resultUser = await db.collection("users").findOne({ username: this.data.username })
+        if (bcrypt.compareSync(this.data.password, resultUser.password)) {
+        return resultUser
+        } else {
+            this.errors.push('Login failed');
+            return false
+        }
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 module.exports = User
