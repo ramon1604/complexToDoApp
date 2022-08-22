@@ -62,7 +62,7 @@ User.prototype.login = async function () {
         if (bcrypt.compareSync(this.data.password, resultUser.password)) {
         return resultUser
         } else {
-            this.errors.push('Login failed');
+            this.errors.push('Invalid Username / Password');
             return false
         }
     } catch (error) {

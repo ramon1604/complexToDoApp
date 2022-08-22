@@ -6,12 +6,13 @@ const path = require('path')
 //Load globals
 require(path.join(__dirname, 'globals'))
 
-//Load sessionOptions
+//Load utils
 app.use(sessionOptions)
+app.use(flashOpts)
 
 // External files
 const { home, register, login, logout } = require(path.join(appRoot, 'router'))
-app.use(express.static(path.join(appRoot, 'public')))
+app.use(express.static(path.join(appRoot, 'browser')))
 app.set('views', path.join(appRoot, 'views'))
 
 // Template engine
