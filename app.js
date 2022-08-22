@@ -10,7 +10,7 @@ require(path.join(__dirname, 'globals'))
 app.use(sessionOptions)
 
 // External files
-const { home, register, login } = require(path.join(appRoot, 'router'))
+const { home, register, login, logout } = require(path.join(appRoot, 'router'))
 app.use(express.static(path.join(appRoot, 'public')))
 app.set('views', path.join(appRoot, 'views'))
 
@@ -25,6 +25,7 @@ app.use(express.json())
 app.use('/', home)
 app.use('/register', register)
 app.use('/login', login)
+app.use('/logout', logout)
 
 // Listen port
 let port = process.env.PORT

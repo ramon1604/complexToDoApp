@@ -3,7 +3,7 @@ const User = require(path.join(appRoot, 'tables/User'))
 
 exports.home = (req, res) => {
     if (req.session.user) {
-        res.send('Welcome ' + req.session.user.username)
+        res.render('home-dashboard', { user: req.session.user })
     } else {
         res.render('home-guest')
     }
@@ -19,10 +19,31 @@ exports.register = async (req, res) => {
 }
 
 exports.login = async (req, res) => {
+    if (!req.body.username) {
+        res.redirect('/')
+        return
+    }
     let user = new User(req.body)
     if (await user.login()) {
         req.session.user = user.data
-        res.send('Login successful')
-    } else { res.send(user.errors) }
+        req.session.save(err => {
+            if (err) {
+                res.send('Error')
+            } else {
+                res.redirect('/')
+            }
+        })
+    } else {
+        res.send(user.errors)
+    }
 }
 
+exports.logout = async (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            res.send('Error')
+        } else {
+            res.redirect('/')
+        }
+    })
+}
