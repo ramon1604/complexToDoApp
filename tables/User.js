@@ -1,6 +1,7 @@
 // Middleware
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
+const md5 = require('md5')
 
 class User {
     constructor(data) {
@@ -40,6 +41,8 @@ class User {
         try {
             this.cleanUp()
             await this.validate()
+            this.getAvatar()
+            this.data.avatar = this.avatar
             if (!this.errors.length) {
                 let salt = bcrypt.genSaltSync(10)
                 this.data.password = bcrypt.hashSync(this.data.password, salt)
@@ -65,6 +68,9 @@ class User {
         } catch (error) {
             console.log(error)
         }
+    }
+    getAvatar() {
+        this.avatar = `https://gravatar.com/avatar/${md5(this.data.email)}?s=128`
     }
 }
 

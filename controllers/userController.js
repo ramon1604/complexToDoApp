@@ -26,8 +26,9 @@ exports.login = async (req, res) => {
         return
     }
     let user = new User(req.body)
-    if (await user.login()) {
-        req.session.user = user.data
+    let loggedUser = await user.login()
+    if (loggedUser) {
+        req.session.user = loggedUser
         sessionSave(req, res, 'ok', 'errors')
     } else {
         sessionSave(req, res, user.errors, 'errors')
