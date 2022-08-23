@@ -23,7 +23,7 @@ User.prototype.cleanUp = function () {
 User.prototype.validate = async function () {
     if (this.data.username == "") { this.errors.push('Username required.') }
     if (this.data.username != "" && !validator.isAlphanumeric(this.data.username)) { this.errors.push('Username may only contain letters and numbers.') }
-    if (!validator.isEmail(this.data.email)) { this.errors.push('Valid email required.') } 
+    if (!validator.isEmail(this.data.email)) { this.errors.push('Valid email required.') }
     if (this.data.password == "") { this.errors.push('Password required.') }
     if (this.data.password.length > 0 && this.data.password.length <= 8) { this.errors.push('Password must be greater than 8 characters.') }
     if (this.data.password.length > 30) { this.errors.push('Password can not exceed 30 characters and contain letters and numbers.') }
@@ -34,7 +34,6 @@ User.prototype.validate = async function () {
         if (userExists) { this.errors.push('Username already taken.') }
         const emailExists = await db.collection("users").findOne({ email: this.data.email })
         if (emailExists) { this.errors.push('Email already taken.') }
-
     }
 
 }
