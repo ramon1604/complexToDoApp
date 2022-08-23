@@ -1,5 +1,4 @@
-exports.sessionSave = (req, res, msgs) => {
-    (msgs === 'ok') ? '' : req.flash('errors', msgs)
+exports.sessionSave = (req, res, msgs, msgType) => {
+    if (msgs === 'ok') {''} else {req.flash(msgType, msgs)}
     req.session.save(() => res.redirect('/'))
-    // console.log(req.session.flash.errors)
 }

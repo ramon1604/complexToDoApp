@@ -6,39 +6,35 @@ exports.home = (req, res) => {
     if (req.session.user) {
         res.render('home-dashboard', { user: req.session.user })
     } else {
-        res.render('home-guest', {errors: req.flash('errors')})
+        res.render('home-guest', {errors: req.flash('errors'), regErrors: req.flash('regErrors')})
     }
 }
 
 exports.register = async (req, res) => {
     let user = new User(req.body)
     if (await user.register()) {
-        res.send('Register successful')
+        req.session.user = user.data
+        sessionSave(req, res, 'ok', 'errors')
     } else {
-        res.send(user.errors)
+        sessionSave(req, res, user.errors, 'regErrors')
     }
 }
 
 exports.login = async (req, res) => {
     if (!req.body.username) {
-        sessionSave(req, res, ['Username is required'])
+        sessionSave(req, res, ['Username is required'], 'errors')
         return
     }
     let user = new User(req.body)
     if (await user.login()) {
         req.session.user = user.data
-        sessionSave(req, res, 'ok')
+        sessionSave(req, res, 'ok', 'errors')
     } else {
-        sessionSave(req, res, user.errors)
+        sessionSave(req, res, user.errors, 'errors')
     }
 }
 
 exports.logout = async (req, res) => {
-    req.session.destroy(err => {
-        if (err) {
-            res.send('Error')
-        } else {
-            res.redirect('/')
-        }
-    })
+    delete req.session.user
+    await sessionSave(req, res, ['Session has been ended.'], 'errors')
 }
