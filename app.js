@@ -11,9 +11,9 @@ app.use(sessionOptions)
 app.use(flashOpts)
 
 // External files
-const { home, register, login, logout } = require(path.join(appRoot, 'router'))
+const { home, register, login, logout, createPost } = require(path.join(appRoot, 'router'))
 app.use(express.static(path.join(appRoot, 'browser')))
-app.set('views', path.join(appRoot, 'views'))
+app.set('views', [path.join(appRoot, 'views'), path.join(appRoot, 'partials')])
 
 // Template engine
 app.set('view engine', 'ejs')
@@ -22,11 +22,16 @@ app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
-// Routes
+// Home Route
 app.use('/', home)
+
+//User Routes
 app.use('/register', register)
 app.use('/login', login)
 app.use('/logout', logout)
+
+//Post Routes
+app.use('/register', createPost)
 
 // Listen port
 let port = process.env.PORT
