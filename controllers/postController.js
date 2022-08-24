@@ -1,10 +1,9 @@
 const path = require('path')
 const Post = require(path.join(appRoot, 'tables/post'))
+const { sessionSave } = require(path.join(appRoot, 'functions/sessions'))
 
-exports.createPost = async (req, res) => {
-    if (req.session.user) {
-        res.render('create-post', { user: req.session.user })
-    } else {
-        res.redirect('/')
-    }
+async function createPost(req, res) {
+    res.render('create-post', { user: req.session.user })
 }
+
+module.exports = { createPost }

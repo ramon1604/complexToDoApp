@@ -11,7 +11,7 @@ app.use(sessionOptions)
 app.use(flashOpts)
 
 // External files
-const { home, register, login, logout, createPost } = require(path.join(appRoot, 'router'))
+const { homeRoute } = require(path.join(appRoot, 'router'))
 app.use(express.static(path.join(appRoot, 'browser')))
 app.set('views', [path.join(appRoot, 'views'), path.join(appRoot, 'partials')])
 
@@ -23,15 +23,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
 // Home Route
-app.use('/', home)
-
-//User Routes
-app.use('/register', register)
-app.use('/login', login)
-app.use('/logout', logout)
-
-//Post Routes
-app.use('/register', createPost)
+app.use('/', homeRoute)
 
 // Listen port
 let port = process.env.PORT

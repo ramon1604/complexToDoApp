@@ -2,15 +2,15 @@ const path = require('path')
 const User = require(path.join(appRoot, 'tables/User'))
 const { sessionSave } = require(path.join(appRoot, 'functions/sessions'))
 
-exports.home = (req, res) => {
+function home(req, res) {
     if (req.session.user) {
         res.render('home-dashboard', { user: req.session.user })
     } else {
-        res.render('home-guest', {errors: req.flash('errors'), regErrors: req.flash('regErrors')})
+        res.render('home-guest', { errors: req.flash('errors'), regErrors: req.flash('regErrors') })
     }
 }
 
-exports.register = async (req, res) => {
+async function register(req, res) {
     let user = new User(req.body)
     if (await user.register()) {
         req.session.user = user.data
@@ -20,7 +20,7 @@ exports.register = async (req, res) => {
     }
 }
 
-exports.login = async (req, res) => {
+async function login(req, res) {
     if (!req.body.username) {
         sessionSave(req, res, ['Username is required'], 'errors')
         return
@@ -35,7 +35,9 @@ exports.login = async (req, res) => {
     }
 }
 
-exports.logout = async (req, res) => {
+async function logout(req, res) {
     delete req.session.user
     await sessionSave(req, res, ['Session has been ended.'], 'errors')
 }
+
+module.exports = { logout, login, register, home }

@@ -1,16 +1,17 @@
 const express = require('express')
 const router = express.Router()
 const path = require('path')
-const {home, register, login, logout} = require(path.join(appRoot, 'controllers/userController'))
-const {createPost} = require(path.join(appRoot, 'controllers/postController'))
+const { home, register, login, logout } = require(path.join(appRoot, 'controllers/userController'))
+const { createPost } = require(path.join(appRoot, 'controllers/postController'))
+const { isLoggedin } = require(path.join(appRoot, 'functions/sessions'))
 
+module.exports = {
+    // Users related routes
+    homeRoute: router.get('/', home),
+    registerRoute: router.post('/register', register),
+    loginRoute: router.post('/login', login),
+    logoutRoute: router.post('/logout', logout),
 
-// Users related routes
-exports.home = router.get('/', home)
-exports.register = router.post('/register', register)
-exports.login =  router.post('/login', login)
-exports.logout =  router.post('/logout', logout)
-
-// Posts related routes
-exports.createPost = router.get('/create-post', createPost)
-
+    // Posts related routes
+    createPostRoute: router.get('/create-post', isLoggedin, createPost)
+}
