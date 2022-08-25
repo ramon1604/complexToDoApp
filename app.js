@@ -10,6 +10,12 @@ require(path.join(__dirname, 'globals'))
 app.use(sessionOptions)
 app.use(flashOpts)
 
+//Load locals for ejs
+app.use((req, res, next) => {
+  res.locals.user = req.session.user
+  next()
+})
+
 // External files
 const { homeRoute } = require(path.join(appRoot, 'router'))
 app.use(express.static(path.join(appRoot, 'browser')))
