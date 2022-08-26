@@ -25,7 +25,7 @@ async function viewPost(req, res) {
     if (returnedData) {
         res.render('view-post', returnedData)
     } else {
-        res.sendStatus(404)
+        res.render('page-not-found')
     }
 }
 

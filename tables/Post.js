@@ -40,8 +40,11 @@ class Post {
                 return false
             }
             this.data = { _id: ObjectId(this.data._id) }
-            const resultPost = await db.collection("posts").findOne(this.data)
-            return resultPost
+            const resultPost = await db.collection("posts").aggregate([
+                {$match: this.data},
+                {$lookup: {from: "users", localField: "author", foreignField: "_id", as: "docAuthor"}}
+            ]).toArray()
+            return resultPost[0]
         } catch (error) {
             console.log('Post not found')
         }
