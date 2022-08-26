@@ -42,7 +42,6 @@ class User {
             this.cleanUp()
             await this.validate()
             this.getAvatar()
-            this.data.avatar = this.avatar
             if (!this.errors.length) {
                 let salt = bcrypt.genSaltSync(10)
                 this.data.password = bcrypt.hashSync(this.data.password, salt)
@@ -71,6 +70,7 @@ class User {
     }
     getAvatar() {
         this.avatar = `https://gravatar.com/avatar/${md5(this.data.email)}?s=128`
+        this.data.avatar = this.avatar
     }
 }
 

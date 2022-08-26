@@ -11,9 +11,10 @@ module.exports = {
     registerRoute: router.post('/register', register),
     loginRoute: router.post('/login', login),
     logoutRoute: router.post('/logout', logout),
+    logoutRoute2: router.get('/logout', logout),
 
     // Posts related routes
     createPostRoute: router.get('/create-post', isLoggedin, createPost),
     savePostRoute: router.post('/create-post', isLoggedin, savePost),
-    viewPostRoute: router.get('/view-post/:id', viewPost)
+    viewPostRoute: router.get('/view-post/:id', isLoggedin, viewPost)
 }

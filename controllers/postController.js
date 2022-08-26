@@ -9,9 +9,9 @@ async function createPost(req, res) {
 async function savePost(req, res) {
     req.body.userId = req.session.user._id
     let post = new Post(req.body)
-    if (await post.save()) {
-        req.session.post = post.data
-        sessionSave(req, res, 'ok', 'errors', '/')
+    returnedData = await post.save()
+    if (returnedData) {
+        sessionSave(req, res, 'ok', 'errors', '/create-post')
     } else {
         sessionSave(req, res, post.errors, 'regErrors', '/')
     }

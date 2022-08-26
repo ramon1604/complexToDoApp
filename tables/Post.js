@@ -36,6 +36,9 @@ class Post {
     }
     async view() {
         try {
+            if (typeof (this.data._id) != "string" || !ObjectId.isValid(this.data._id)) {
+                return false
+            }
             this.data = { _id: ObjectId(this.data._id) }
             const resultPost = await db.collection("posts").findOne(this.data)
             return resultPost
