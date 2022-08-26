@@ -18,9 +18,7 @@ async function savePost(req, res) {
 }
 
 async function viewPost(req, res) {
-    let viewData = {}
-    viewData._id = req.params.id
-    let post = new Post(viewData)
+    let post = new Post({_id: req.params.id})
     returnedData = await post.view()
     if (returnedData) {
         res.render('view-post', returnedData)
