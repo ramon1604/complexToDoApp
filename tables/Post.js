@@ -34,6 +34,7 @@ class Post {
             console.log('Could not save post')
         }
     }
+
     async view() {
         try {
             if (typeof (this.data._id) != "string" || !ObjectId.isValid(this.data._id)) {
@@ -41,14 +42,31 @@ class Post {
             }
             this.data = { _id: ObjectId(this.data._id) }
             const resultPost = await db.collection("posts").aggregate([
-                {$match: this.data},
-                {$lookup: {from: "users", localField: "author", foreignField: "_id", as: "docAuthor"}}
+                { $match: this.data },
+                { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "docAuthor" } }
             ]).toArray()
             return resultPost[0]
         } catch (error) {
             console.log('Post not found')
         }
     }
+
+    async profile() {
+        try {
+            if (typeof (this.data._id) != "string" || !ObjectId.isValid(this.data._id)) {
+                return false
+            }
+            this.data = { _id: ObjectId(this.data._id) }
+            const resultProfile = await db.collection("users").aggregate([
+                { $match: this.data },
+                { $lookup: { from: "posts", localField: "_id", foreignField: "author", as: "docsAuthor" } }
+            ]).toArray()
+            return resultProfile[0]
+        } catch (error) {
+            console.log('Post not found')
+        }
+    }
+
 }
 
 module.exports = Post

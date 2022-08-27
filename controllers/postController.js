@@ -18,7 +18,7 @@ async function savePost(req, res) {
 }
 
 async function viewPost(req, res) {
-    let post = new Post({_id: req.params.id})
+    let post = new Post({ _id: req.params.id })
     returnedData = await post.view()
     if (returnedData) {
         res.render('view-post', returnedData)
@@ -27,4 +27,14 @@ async function viewPost(req, res) {
     }
 }
 
-module.exports = { createPost, savePost, viewPost }
+async function profilePosts(req, res) {
+    let post = new Post({ _id: req.session.user._id })
+    returnedData = await post.profile()
+    if (returnedData) {
+        res.render('profile-posts', returnedData)
+    } else {
+        res.render('page-not-found')
+    }
+}
+
+module.exports = { createPost, savePost, viewPost, profilePosts }
