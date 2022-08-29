@@ -59,7 +59,12 @@ class Post {
             this.data = { _id: ObjectId(this.data._id) }
             const resultProfile = await db.collection("users").aggregate([
                 { $match: this.data },
-                { $lookup: { from: "posts", localField: "_id", foreignField: "author", as: "docsAuthor" } }
+                {
+                    $lookup: {
+                        from: "posts", localField: "_id", foreignField: "author", as: "docsAuthor", pipeline:
+                            [{ $sort: { createdDate: -1 } }]
+                    }
+                }
             ]).toArray()
             return resultProfile[0]
         } catch (error) {

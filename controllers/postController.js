@@ -28,7 +28,7 @@ async function viewPost(req, res) {
 }
 
 async function profilePosts(req, res) {
-    let post = new Post({ _id: req.session.user._id })
+    let post = new Post({ _id: req.params.id })
     returnedData = await post.profile()
     if (returnedData) {
         res.render('profile-posts', returnedData)
