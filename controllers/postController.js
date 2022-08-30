@@ -21,6 +21,7 @@ async function viewPost(req, res) {
     let post = new Post({ _id: req.params.id })
     returnedData = await post.view()
     if (returnedData) {
+        returnedData.userId = req.session.user._id
         res.render('view-post', returnedData)
     } else {
         res.render('page-not-found')
