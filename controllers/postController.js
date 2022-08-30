@@ -7,7 +7,7 @@ async function createPost(req, res) {
 }
 
 async function savePost(req, res) {
-    req.body.userId = req.session.user._id
+    req.body.userId = res.locals.user._id
     let post = new Post(req.body)
     returnedData = await post.save()
     if (returnedData) {
@@ -21,7 +21,6 @@ async function viewPost(req, res) {
     let post = new Post({ _id: req.params.id })
     returnedData = await post.view()
     if (returnedData) {
-        returnedData.userId = req.session.user._id
         res.render('view-post', returnedData)
     } else {
         res.render('page-not-found')
