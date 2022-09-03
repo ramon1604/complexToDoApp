@@ -30,6 +30,7 @@ app.use(express.json())
 
 // Home Route
 app.use('/', homeRoute)
+app.all('*', (req, res) => res.render('page-not-found'));
 
 // Listen port
 let port = process.env.PORT
