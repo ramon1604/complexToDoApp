@@ -17,5 +17,8 @@ module.exports = {
     createPostRoute: router.get('/create-post', isLoggedin, createPost),
     savePostRoute: router.post('/create-post', isLoggedin, savePost),
     viewPostRoute: router.get('/view-post/:id', isLoggedin, viewPost),
-    profilePostsRoute: router.get('/profile-posts/:id', isLoggedin, profilePosts)
+    profilePostsRoute: router.get('/profile-posts/:id', isLoggedin, profilePosts),
+
+    // Unknown related routes
+    unknownRoutes: router.get('*', (req, res) => res.render('page-not-found'))
 }

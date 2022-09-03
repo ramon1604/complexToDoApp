@@ -17,7 +17,7 @@ app.use((req, res, next) => {
 })
 
 // External files
-const { homeRoute } = require(path.join(appRoot, 'router'))
+const { homeRoute, unknownRoutes } = require(path.join(appRoot, 'router'))
 app.use(express.static(path.join(appRoot, 'browser')))
 app.set('views', [path.join(appRoot, 'views'), path.join(appRoot, 'partials')])
 
@@ -30,7 +30,7 @@ app.use(express.json())
 
 // Home Route
 app.use('/', homeRoute)
-app.all('*', (req, res) => res.render('page-not-found'));
+app.all('*', unknownRoutes);
 
 // Listen port
 let port = process.env.PORT
