@@ -7,7 +7,7 @@ function isLoggedin(req, res, next) {
     if (res.locals.user) {
         next()
     } else {
-        sessionSave(req, res, ['Login required for this action'], 'errors','/')
+        sessionSave(req, res, ['Login required to continue'], 'errors','/')
     }
 }
 
