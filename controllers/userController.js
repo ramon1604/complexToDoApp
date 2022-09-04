@@ -41,11 +41,15 @@ async function login(req, res) {
 }
 
 async function logout(req, res) {
-    delete req.session.user
-    if (res.locals.user.acknowledged) {
-        await sessionSave(req, res, ['Sign In to continue.'], 'errors', '/')
+    if (req.session.user) {
+        delete req.session.user
+        if (res.locals.user.acknowledged) {
+            await sessionSave(req, res, ['Sign In to continue.'], 'errors', '/')
+        } else {
+            await sessionSave(req, res, ['Session has been ended.'], 'errors', '/')
+        }
     } else {
-        await sessionSave(req, res, ['Session has been ended.'], 'errors', '/')
+        res.redirect('/')
     }
 }
 

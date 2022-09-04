@@ -134,6 +134,14 @@ textarea.tall-textarea {
   margin: 0;
 }
 
+.edit-post-button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
 /* Search Overaly */
 .search-overlay {
   display: flex;
