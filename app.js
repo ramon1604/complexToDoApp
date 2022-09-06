@@ -13,6 +13,8 @@ app.use(flashOpts)
 //Load locals for ejs
 app.use((req, res, next) => {
   res.locals.user = req.session.user
+  res.locals.errors = req.flash('errors')
+  res.locals.success = req.flash('success')
   next()
 })
 

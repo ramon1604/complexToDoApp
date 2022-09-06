@@ -37,4 +37,14 @@ async function profilePosts(req, res) {
     }
 }
 
-module.exports = { createPost, savePost, viewPost, profilePosts }
+async function editPost(req, res) {
+    let post = new Post( req.body )
+    returnedData = await post.edit()
+    if (returnedData) {
+        res.render('edit-post', returnedData)
+    } else {
+        res.render('page-not-found')
+    }
+}
+
+module.exports = { createPost, savePost, viewPost, profilePosts, editPost }

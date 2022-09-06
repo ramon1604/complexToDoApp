@@ -3,11 +3,13 @@
 <% if (user) { %><%- include('navLoggedin') %><% } else { %><%- include('navLoggedout') %><% } %>
 
 <div class="container py-md-5 container--narrow">
+  <%- include('flash') %>
   <div class="d-flex justify-content-between">
     <h2><%= title %></h2>
     <% if (author == user._id) { %>
     <span class="pt-2">
-      <form class="edit-post-form d-inline" action="#" method="POST">
+      <form class="edit-post-form d-inline" action="/edit-post" method="POST">
+        <input type="text" name="_id" value="<%= _id %>" hidden>
         <button class="edit-post-button text-primary" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></button>
       </form>
       <form class="delete-post-form d-inline" action="#" method="POST">

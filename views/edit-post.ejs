@@ -1,0 +1,25 @@
+<%- include('header') -%>
+
+<% if (user) { %><%- include('navLoggedin') %><% } else { %><%- include('navLoggedout') %><% } %>
+
+<div class="container py-md-1 container--narrow">
+  <%- include('flash') %>
+  <form action="/update-post" method="POST">
+    <div class="form-group">
+      <label for="post-title" class="text-muted mb-1"><small>Title</small></label>
+      <input value="<%= title %>" required name="title" id="post-title" class="form-control form-control-lg form-control-title" type="text" placeholder="" autocomplete="off">
+    </div>
+
+    <div class="form-group">
+      <label for="post-body" class="text-muted mb-1"><small>Body Content</small></label>
+      <textarea required name="body" id="post-body" class="body-content tall-textarea form-control" type="text"><%= body %></textarea>
+    </div>
+    <input type="text" name="_id" value="<%= _id %>" hidden>
+    <button class="btn btn-primary">Save Updates</button>
+  </form>
+  <script>
+      document.getElementById('post-title').focus()
+  </script>
+</div>
+
+<%- include('footer') -%>

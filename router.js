@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const path = require('path')
 const { home, register, login, logout } = require(path.join(appRoot, 'controllers/userController'))
-const { createPost, savePost, viewPost, profilePosts } = require(path.join(appRoot, 'controllers/postController'))
+const { createPost, savePost, viewPost, profilePosts, editPost } = require(path.join(appRoot, 'controllers/postController'))
 const { isLoggedin } = require(path.join(appRoot, 'functions/sessions'))
 
 module.exports = {
@@ -18,6 +18,7 @@ module.exports = {
     savePostRoute: router.post('/create-post', isLoggedin, savePost),
     viewPostRoute: router.get('/view-post/:id', isLoggedin, viewPost),
     profilePostsRoute: router.get('/profile-posts/:id', isLoggedin, profilePosts),
+    editPostRoute: router.post('/edit-post', isLoggedin, editPost),
 
     // Unknown related routes
     unknownRoutes: router.get('*', (req, res) => res.render('page-not-found'))

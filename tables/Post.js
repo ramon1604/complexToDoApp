@@ -72,6 +72,19 @@ class Post {
         }
     }
 
+    async edit() {
+        try {
+            if (typeof (this.data._id) != "string" || !ObjectId.isValid(this.data._id)) {
+                return false
+            }
+            this.data = { _id: ObjectId(this.data._id) }
+            const resultPost = await db.collection("posts").findOne(this.data._id)
+            return resultPost
+        } catch (error) {
+            console.log('Post not found')
+        }
+    }
+
 }
 
 module.exports = Post
