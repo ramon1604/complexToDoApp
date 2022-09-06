@@ -1,6 +1,6 @@
 const path = require('path')
 const Post = require(path.join(appRoot, 'tables/post'))
-const { sessionSave } = require(path.join(appRoot, 'functions/sessions'))
+const { sessionSave } = require(path.join(appRoot, 'server/sessions'))
 
 async function createPost(req, res) {
     res.render('create-post')
@@ -11,9 +11,9 @@ async function savePost(req, res) {
     let post = new Post(req.body)
     returnedData = await post.save()
     if (returnedData) {
-        sessionSave(req, res, 'ok', 'errors', '/create-post')
+        sessionSave(req, res, 'ok', 'errors', '/create-post', false)
     } else {
-        sessionSave(req, res, post.errors, 'regErrors', '/')
+        sessionSave(req, res, post.errors, 'regErrors', '/', false)
     }
 }
 
@@ -47,4 +47,14 @@ async function editPost(req, res) {
     }
 }
 
-module.exports = { createPost, savePost, viewPost, profilePosts, editPost }
+async function updatePost(req, res) {
+    let post = new Post( req.body )
+    returnedData = await post.update()
+    if (returnedData) {
+        sessionSave(req, res, post.success, 'success', 'edit-post', req.body)
+    } else {
+        res.render('page-not-found')
+    }
+}
+
+module.exports = { createPost, savePost, viewPost, profilePosts, editPost, updatePost }

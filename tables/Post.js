@@ -3,6 +3,7 @@ class Post {
     constructor(data) {
         this.data = data
         this.errors = []
+        this.success = []
     }
     cleanUp() {
         if (typeof (this.data.title) != "string") { this.data.title = "" }
@@ -20,6 +21,7 @@ class Post {
         if (this.data.title == "") { this.errors.push('Title required.') }
         if (this.data.body == "") { this.errors.push('Body required.') }
     }
+
     async save() {
         try {
             this.cleanUp()
@@ -79,6 +81,22 @@ class Post {
             }
             this.data = { _id: ObjectId(this.data._id) }
             const resultPost = await db.collection("posts").findOne(this.data._id)
+            return resultPost
+        } catch (error) {
+            console.log('Post not found')
+        }
+    }
+
+    async update() {
+        try {
+            this.data.title = this.data.title.trim().toUpperCase()
+            this.data.body = this.data.body.trim()
+            if (typeof (this.data._id) != "string" || !ObjectId.isValid(this.data._id)) {
+                return false
+            }
+            this.data._id = new ObjectId(this.data._id)
+            const resultPost = await db.collection("posts").updateOne({ _id: this.data._id }, { $set: { title: this.data.title, body: this.data.body }})
+            if (resultPost) {this.success.push('Updates were successful')}
             return resultPost
         } catch (error) {
             console.log('Post not found')

@@ -7,6 +7,7 @@ class User {
     constructor(data) {
         this.data = data
         this.errors = []
+        this.success = []
     }
     cleanUp() {
         if (typeof (this.data.username) != "string") { this.data.username = "" }
