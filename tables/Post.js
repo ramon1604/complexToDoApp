@@ -1,3 +1,4 @@
+const sanitizeHTML = require('sanitize-html')
 const ObjectId = require('mongodb').ObjectId
 class Post {
     constructor(data) {
@@ -8,26 +9,37 @@ class Post {
     cleanUp() {
         if (typeof (this.data.title) != "string") { this.data.title = "" }
         if (typeof (this.data.body) != "string") { this.data.body = "" }
-
-        // get rid of any bogus properties
-        this.data = {
-            author: ObjectId(this.data.userId),
-            title: this.data.title.trim().toUpperCase(),
-            body: this.data.body.trim(),
-            createdDate: new Date()
-        }
     }
+
+    cleanBogus() {
+        if (this.data._id) { this.data._id = new ObjectId(this.data._id) }
+        if (this.data.author) { this.data.author = new ObjectId(this.data.author) }
+        this.data.title = sanitizeHTML(this.data.title.trim())
+        this.data.body = sanitizeHTML(this.data.body.trim())
+        this.data.createdDate = new Date()
+    }
+
     async validate() {
         if (this.data.title == "") { this.errors.push('Title required.') }
         if (this.data.body == "") { this.errors.push('Body required.') }
     }
 
+    validId() {
+        if (typeof (this.data._id) != "string" || !ObjectId.isValid(this.data._id)) {
+            return false
+        } else {
+            return true
+        }
+    }
+
     async save() {
         try {
             this.cleanUp()
+            this.cleanBogus()
             await this.validate()
             if (!this.errors.length) {
                 const insertedPost = await db.collection("posts").insertOne(this.data)
+                if (insertedPost) { this.success.push('New post successfully created.') }
                 return insertedPost
             } else {
                 return false
@@ -39,12 +51,9 @@ class Post {
 
     async view() {
         try {
-            if (typeof (this.data._id) != "string" || !ObjectId.isValid(this.data._id)) {
-                return false
-            }
-            this.data = { _id: ObjectId(this.data._id) }
+            if (!this.validId()) { return false }
             const resultPost = await db.collection("posts").aggregate([
-                { $match: this.data },
+                { $match: { _id: ObjectId(this.data._id) } },
                 { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "docAuthor" } }
             ]).toArray()
             return resultPost[0]
@@ -55,12 +64,9 @@ class Post {
 
     async profile() {
         try {
-            if (typeof (this.data._id) != "string" || !ObjectId.isValid(this.data._id)) {
-                return false
-            }
-            this.data = { _id: ObjectId(this.data._id) }
+            if (!this.validId()) { return false }
             const resultProfile = await db.collection("users").aggregate([
-                { $match: this.data },
+                { $match: { _id: ObjectId(this.data._id) } },
                 {
                     $lookup: {
                         from: "posts", localField: "_id", foreignField: "author", as: "docsAuthor", pipeline:
@@ -76,11 +82,8 @@ class Post {
 
     async edit() {
         try {
-            if (typeof (this.data._id) != "string" || !ObjectId.isValid(this.data._id)) {
-                return false
-            }
-            this.data = { _id: ObjectId(this.data._id) }
-            const resultPost = await db.collection("posts").findOne(this.data._id)
+            if (!this.validId()) { return false }
+            const resultPost = await db.collection("posts").findOne(ObjectId(this.data._id))
             return resultPost
         } catch (error) {
             console.log('Post not found')
@@ -89,14 +92,10 @@ class Post {
 
     async update() {
         try {
-            this.data.title = this.data.title.trim().toUpperCase()
-            this.data.body = this.data.body.trim()
-            if (typeof (this.data._id) != "string" || !ObjectId.isValid(this.data._id)) {
-                return false
-            }
-            this.data._id = new ObjectId(this.data._id)
-            const resultPost = await db.collection("posts").updateOne({ _id: this.data._id }, { $set: { title: this.data.title, body: this.data.body }})
-            if (resultPost) {this.success.push('Updates were successful')}
+            if (!this.validId()) { return false }
+            this.cleanBogus()
+            const resultPost = await db.collection("posts").updateOne({ _id: this.data._id }, { $set: { title: this.data.title, body: this.data.body, createdDate: this.data.createdDate } })
+            if (resultPost) { this.success.push('Updates were successful') }
             return resultPost
         } catch (error) {
             console.log('Post not found')

@@ -20,12 +20,12 @@
   </div>
 
   <p class="text-muted small mb-4">
-    <a href="javascript:history.back()" ><img class="avatar-tiny" src="<%= docAuthor[0].avatar %>"></a>
-    Posted by <a href="javascript:history.back()" ><%= docAuthor[0].username %></a> on <%= createdDate.toLocaleDateString("en-US",{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }) %>
+    <a href="/profile-posts/<%= user._id %>" ><img class="avatar-tiny" src="<%= docAuthor[0].avatar %>"></a>
+    Posted by <a href="/profile-posts/<%= user._id %>" ><%= docAuthor[0].username %></a> on <%= createdDate.toLocaleDateString("en-US",{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }) %>
   </p>
 
   <div class="body-content">
-    <p><%= body %></p>
+    <%- body %>
   </div>
 
 </div>

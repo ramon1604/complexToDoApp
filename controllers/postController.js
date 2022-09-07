@@ -7,11 +7,11 @@ async function createPost(req, res) {
 }
 
 async function savePost(req, res) {
-    req.body.userId = res.locals.user._id
+    req.body.author = res.locals.user._id
     let post = new Post(req.body)
     returnedData = await post.save()
     if (returnedData) {
-        sessionSave(req, res, 'ok', 'errors', '/create-post', false)
+        sessionSave(req, res, post.success, 'success', `/profile-posts/${req.body.author}`, false)
     } else {
         sessionSave(req, res, post.errors, 'regErrors', '/', false)
     }

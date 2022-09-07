@@ -13,14 +13,16 @@ class User {
         if (typeof (this.data.username) != "string") { this.data.username = "" }
         if (typeof (this.data.email) != "string") { this.data.email = "" }
         if (typeof (this.data.password) != "string") { this.data.password = "" }
+    }
 
-        // get rid of any bogus properties
+    cleanBogus() {
         this.data = {
             username: this.data.username.trim().toLowerCase(),
             email: this.data.email.trim().toLowerCase(),
             password: this.data.password
         }
     }
+
     async validate() {
         if (this.data.username == "") { this.errors.push('Username required.') }
         if (this.data.username != "" && !validator.isAlphanumeric(this.data.username)) { this.errors.push('Username may only contain letters and numbers.') }
@@ -41,6 +43,7 @@ class User {
     async register() {
         try {
             this.cleanUp()
+            this.cleanBogus()
             await this.validate()
             this.getAvatar()
             if (!this.errors.length) {
@@ -58,6 +61,7 @@ class User {
     async login() {
         try {
             this.cleanUp()
+            this.cleanBogus()
             const resultUser = await db.collection("users").findOne({ username: this.data.username })
             if (bcrypt.compareSync(this.data.password, resultUser.password)) {
                 return resultUser
