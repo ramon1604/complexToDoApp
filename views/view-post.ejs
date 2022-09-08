@@ -14,7 +14,7 @@
       </form>
       <form id="delForm" class="delete-post-form d-inline" action="/delete-post" method="POST">
         <input type="text" name="_id" value="<%= _id %>" hidden>
-        <button type="button" onclick="swal({ text: 'Click [Ok] button to delete post.', icon: 'error', buttons: true, dangerMode: true }).then((value) => {if(value){document.getElementById('delForm').submit()};});" class="delete-post-button text-danger" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash"></i></button>
+        <button type="button" onclick="alertMsg('Warning','Click [Ok] button to delete post.','error',true,true,'delForm')" class="delete-post-button text-danger" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash"></i></button>
       </form>
     </span>
     <% } %>
