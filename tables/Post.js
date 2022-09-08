@@ -110,7 +110,7 @@ class Post {
         try {
             if (!this.validId()) { return false }
             const resultPost = await db.collection("posts").deleteOne({ _id: ObjectId(this.data._id), author: ObjectId(this.data.author) })
-            if (resultPost.modifiedCount) {
+            if (resultPost.deletedCount) {
                 this.success.push('Post deleted successfully.')
             } else {
                 this.errors.push('Operation not allowed')

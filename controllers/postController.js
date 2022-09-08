@@ -62,7 +62,7 @@ async function deletePost(req, res) {
     req.body.author = res.locals.user._id
     let post = new Post(req.body)
     returnedData = await post.delete()
-    if (returnedData.modifiedCount) {
+    if (returnedData.deletedCount) {
         sessionSave(req, res, post.success, 'success', `/profile-posts/${req.body.author}`, false)
     } else {
         sessionSave(req, res, post.errors, 'errors', `/profile-posts/${req.body.author}`, false)
