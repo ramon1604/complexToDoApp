@@ -94,8 +94,27 @@ class Post {
         try {
             if (!this.validId()) { return false }
             this.cleanBogus()
-            const resultPost = await db.collection("posts").updateOne({ _id: this.data._id }, { $set: { title: this.data.title, body: this.data.body, createdDate: this.data.createdDate } })
-            if (resultPost) { this.success.push('Updates were successful') }
+            const resultPost = await db.collection("posts").updateOne({ _id: this.data._id, author: this.data.author }, { $set: { title: this.data.title, body: this.data.body, createdDate: this.data.createdDate } })
+            if (resultPost.modifiedCount) {
+                this.success.push('Updates were successful')
+            } else {
+                this.errors.push('Operation not allowed')
+            }
+            return resultPost
+        } catch (error) {
+            console.log('Post not found')
+        }
+    }
+
+    async delete() {
+        try {
+            if (!this.validId()) { return false }
+            const resultPost = await db.collection("posts").deleteOne({ _id: ObjectId(this.data._id), author: ObjectId(this.data.author) })
+            if (resultPost.modifiedCount) {
+                this.success.push('Post deleted successfully.')
+            } else {
+                this.errors.push('Operation not allowed')
+            }
             return resultPost
         } catch (error) {
             console.log('Post not found')

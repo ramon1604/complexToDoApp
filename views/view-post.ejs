@@ -12,7 +12,8 @@
         <input type="text" name="_id" value="<%= _id %>" hidden>
         <button class="edit-post-button text-primary" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></button>
       </form>
-      <form class="delete-post-form d-inline" action="#" method="POST">
+      <form class="delete-post-form d-inline" action="/delete-post" method="POST">
+        <input type="text" name="_id" value="<%= _id %>" hidden>
         <button class="delete-post-button text-danger" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash"></i></button>
       </form>
     </span>

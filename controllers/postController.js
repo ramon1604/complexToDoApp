@@ -38,7 +38,7 @@ async function profilePosts(req, res) {
 }
 
 async function editPost(req, res) {
-    let post = new Post( req.body )
+    let post = new Post(req.body)
     returnedData = await post.edit()
     if (returnedData) {
         res.render('edit-post', returnedData)
@@ -48,13 +48,25 @@ async function editPost(req, res) {
 }
 
 async function updatePost(req, res) {
-    let post = new Post( req.body )
+    req.body.author = res.locals.user._id
+    let post = new Post(req.body)
     returnedData = await post.update()
-    if (returnedData) {
+    if (returnedData.modifiedCount) {
         sessionSave(req, res, post.success, 'success', 'edit-post', req.body)
     } else {
-        res.render('page-not-found')
+        sessionSave(req, res, post.errors, 'errors', 'edit-post', req.body)
     }
 }
 
-module.exports = { createPost, savePost, viewPost, profilePosts, editPost, updatePost }
+async function deletePost(req, res) {
+    req.body.author = res.locals.user._id
+    let post = new Post(req.body)
+    returnedData = await post.delete()
+    if (returnedData.modifiedCount) {
+        sessionSave(req, res, post.success, 'success', `/profile-posts/${req.body.author}`, false)
+    } else {
+        sessionSave(req, res, post.errors, 'errors', `/profile-posts/${req.body.author}`, false)
+    }
+}
+
+module.exports = { createPost, savePost, viewPost, profilePosts, editPost, updatePost, deletePost }
