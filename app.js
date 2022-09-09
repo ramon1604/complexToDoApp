@@ -6,11 +6,11 @@ const path = require('path')
 //Load globals
 require(path.join(__dirname, 'globals'))
 
-//Load utils
+//Load utils from globals
 app.use(sessionOptions)
 app.use(flashOpts)
 
-//Load locals for ejs
+//Load locals variables
 app.use((req, res, next) => {
   res.locals.user = req.session.user
   res.locals.errors = req.flash('errors')
@@ -18,12 +18,11 @@ app.use((req, res, next) => {
   next()
 })
 
-// External files
-const { homeRoute } = require(path.join(appRoot, 'router'))
+// Browser files
 app.use(express.static(path.join(appRoot, 'browser')))
-app.set('views', [path.join(appRoot, 'views'), path.join(appRoot, 'partials')])
 
 // Template engine
+app.set('views', [path.join(appRoot, 'views'), path.join(appRoot, 'partials')])
 app.set('view engine', 'ejs')
 
 // Utils
@@ -31,6 +30,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
 // Home Route
+const { homeRoute } = require(path.join(appRoot, 'router'))
 app.use('/', homeRoute)
 
 // Listen port
