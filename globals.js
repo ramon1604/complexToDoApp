@@ -6,14 +6,17 @@ dotenv.config()
 const path = require('path')
 global.appRoot = path.resolve(__dirname)
 
-// Connect mongodb
+// Connect mongodb and create indexes
 const { MongoClient } = require('mongodb')
 global.client = new MongoClient(process.env.CONNECTIONSTRING)
-let connectDb = async () => {
+let connectDb = (async () => {
   await client.connect()
-  global.db = client.db()
-}
-connectDb()
+  global.db = await client.db()
+})().then(async () => {
+  await db.collection("posts").createIndex({ title: "text", body: "text" })
+  const indexes = await db.collection("posts").indexes()
+  //console.log(indexes)
+})
 
 //Load session from MongoDb
 const session = require('express-session')

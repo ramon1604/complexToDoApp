@@ -6,6 +6,7 @@ class Post {
         this.errors = []
         this.success = []
     }
+
     cleanUp() {
         if (typeof (this.data.title) != "string") { this.data.title = "" }
         if (typeof (this.data.body) != "string") { this.data.body = "" }
@@ -116,6 +117,22 @@ class Post {
                 this.errors.push('Operation not allowed')
             }
             return resultPost
+        } catch (error) {
+            console.log('Post not found')
+        }
+    }
+
+    async search() {
+        try {
+            if (typeof (this.data.searchTXT) == "string") {
+                const resultPost = await db.collection("posts").aggregate([
+                    { $match: { $text: { $search: this.data.searchTXT } } },
+                    { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "docAuthor" } }
+                ]).toArray()
+                return resultPost
+            } else {
+                return false
+            }
         } catch (error) {
             console.log('Post not found')
         }

@@ -69,4 +69,13 @@ async function deletePost(req, res) {
     }
 }
 
-module.exports = { createPost, savePost, viewPost, profilePosts, editPost, updatePost, deletePost }
+async function searchPosts(req, res) {
+    let post = new Post(req.body)
+    returnedData = await post.search()
+    if (returnedData) {
+        res.send(returnedData)
+    } else {
+        console.log('Invalid data')        
+    }
+}
+module.exports = { createPost, savePost, viewPost, profilePosts, editPost, updatePost, deletePost, searchPosts}

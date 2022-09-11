@@ -8,8 +8,9 @@
   <script>$('[data-toggle="tooltip"]').tooltip()</script>
 
   <script>
-    const headerSearchIcon = new Search()
-    document.getElementById('post-title').focus()
+    if (document.querySelector('.header-search-icon')) {const headerSearchIcon = new Search()}
+    let postTitle = document.getElementById('post-title')
+    if (postTitle){postTitle.focus()}
   </script>
 </body>
 </html>
