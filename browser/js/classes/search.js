@@ -47,7 +47,7 @@ class Search {
 
   renderResultsHTML(posts) {
     if (posts.length) {
-      this.resultsArea.innerHTML = `<div class="list-group shadow-sm">
+      this.resultsArea.innerHTML = DOMPurify.sanitize(`<div class="list-group shadow-sm">
       <div class="list-group-item active"><strong>Search Results</strong> (${posts.length > 1 ? `${posts.length} items` : `${posts.length} item`} found)</div>
       ${posts.map((post) => {
         let postDate = new Date(post.createdDate)
@@ -56,7 +56,7 @@ class Search {
         <span class="text-muted small">by ${post.docAuthor[0].username} on ${postDate.toLocaleDateString("en-US",{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' })}</span>
         </a>`
       }).join('')}
-      </div>`
+      </div>`)
     } else {
       this.resultsArea.innerHTML = `<p class="alert alert-danger text-center shadow-sm">Sorry, no results for that search.</p>`
     }
