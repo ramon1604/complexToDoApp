@@ -5,7 +5,7 @@ const { sessionSave } = require(path.join(appRoot, 'server/sessions'))
 async function followAuthor(req, res) {
     req.body.followerId = res.locals.user._id
     let follow = new Follow(req.body)
-    returnedData = await follow.register()
+    returnedData = await follow.follow()
     if (returnedData) {
         sessionSave(req, res, follow.success, 'success', `/profile-posts/${req.body.authorId}`, false)
     } else {
@@ -14,4 +14,16 @@ async function followAuthor(req, res) {
 
 }
 
-module.exports = { followAuthor }
+async function unfollowAuthor(req, res) {
+    req.body.followerId = res.locals.user._id
+    let follow = new Follow(req.body)
+    returnedData = await follow.unfollow()
+    if (returnedData) {
+        sessionSave(req, res, follow.success, 'success', `/profile-posts/${req.body.authorId}`, false)
+    } else {
+        sessionSave(req, res, follow.errors, 'errors', `/profile-posts/${req.body.authorId}`, false)
+    }
+
+}
+
+module.exports = { followAuthor, unfollowAuthor}

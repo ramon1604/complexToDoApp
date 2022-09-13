@@ -3,7 +3,7 @@ const router = express.Router()
 const path = require('path')
 const { home, register, login, logout } = require(path.join(appRoot, 'controllers/userController'))
 const { createPost, savePost, viewPost, profilePosts, editPost, updatePost, deletePost, searchPosts } = require(path.join(appRoot, 'controllers/postController'))
-const { followAuthor } = require(path.join(appRoot, 'controllers/followController'))
+const { followAuthor, unfollowAuthor } = require(path.join(appRoot, 'controllers/followController'))
 const { isLoggedin } = require(path.join(appRoot, 'server/sessions'))
 
 module.exports = {
@@ -26,6 +26,7 @@ module.exports = {
 
     // Followers related routes
     followAuthorRoute: router.post('/follow-author', isLoggedin, followAuthor),
+    unfollowAuthorRoute: router.post('/unfollow-author', isLoggedin, unfollowAuthor),
 
     // Unknown related routes
     unknownRoutes: router.get('*', (req, res) => res.render('page-not-found'))
