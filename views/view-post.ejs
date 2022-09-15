@@ -22,7 +22,7 @@
   </div>
 
   <p class="text-muted small mb-4">
-    <a href="/profile-posts/<%= docAuthor[0]._id %>" ><img class="avatar-tiny" src="<%= docAuthor[0].avatar %>"></a>
+    <a href="/profile-posts/<%= docAuthor[0]._id %>" ><img class="avatar-tiny" src="https://gravatar.com/avatar/<%= docAuthor[0].avatar %>?s=128"></a>
     Posted by <a href="/profile-posts/<%= docAuthor[0]._id %>" ><%= docAuthor[0].username %></a> on <%= createdDate.toLocaleDateString("en-US",{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }) %>
   </p>
 

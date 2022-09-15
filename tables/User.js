@@ -74,7 +74,7 @@ class User {
         }
     }
     getAvatar() {
-        this.avatar = `https://gravatar.com/avatar/${md5(this.data.email)}?s=128`
+        this.avatar = md5(this.data.email)
         this.data.avatar = this.avatar
     }
 }

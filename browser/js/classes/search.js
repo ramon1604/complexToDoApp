@@ -52,7 +52,7 @@ class Search {
       ${posts.map((post) => {
         let postDate = new Date(post.createdDate)
         return `<a href="/view-post/${post._id}" class="list-group-item list-group-item-action">
-        <img class="avatar-tiny" src="${post.docAuthor[0].avatar}"> <strong>${post.title}</strong>
+        <img class="avatar-tiny" src="https://gravatar.com/avatar/${post.docAuthor[0].avatar}?s=128"> <strong>${post.title}</strong>
         <span class="text-muted small">by ${post.docAuthor[0].username} on ${postDate.toLocaleDateString("en-US",{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' })}</span>
         </a>`
       }).join('')}

@@ -4,7 +4,7 @@
 
 <div class="container py-md-5 container--narrow">
   <%- include('flash') %>
-  <h2><img class="avatar-small" src="<%= avatar %>"> <%= username %>
+  <h2><img class="avatar-small" src="https://gravatar.com/avatar/<%= avatar %>?s=128"> <%= username %>
     <% if (user._id != _id) { %>
     <form class="ml-2 d-inline" action="/follow-author" method="POST">
       <input type="text" name="authorId" value="<%= _id %>" hidden>
@@ -28,7 +28,7 @@
   <div class="list-group">
     <% docsAuthor.forEach((post) => { %>
     <a href="/view-post/<%= post._id %>" class="list-group-item list-group-item-action">
-      <img class="avatar-tiny" src="<%= avatar %>">
+      <img class="avatar-tiny" src="https://gravatar.com/avatar/<%= avatar %>?s=128">
       <strong><%= post.title %></strong> on <%= post.createdDate.toLocaleDateString("en-US",{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }) %>
     </a>
     <% }) %>
