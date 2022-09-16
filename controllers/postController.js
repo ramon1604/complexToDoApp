@@ -11,7 +11,7 @@ async function savePost(req, res) {
     let post = new Post(req.body)
     returnedData = await post.save()
     if (returnedData) {
-        sessionSave(req, res, post.success, 'success', `/profile-posts/${req.body.author}`, false)
+        sessionSave(req, res, post.success, 'success', `/profile-posts/${req.body.author}/myPosts`, false)
     } else {
         sessionSave(req, res, post.errors, 'regErrors', '/', false)
     }
@@ -28,9 +28,11 @@ async function viewPost(req, res) {
 }
 
 async function profilePosts(req, res) {
-    let post = new Post({ _id: req.params.id })
+    let post = new Post({ _id: req.params.id, userType: req.params.userType })
     returnedData = await post.profile()
     if (returnedData) {
+        returnedData.loggedUserData = res.locals.user
+        returnedData.urlParams = { id: req.params.id, userType: req.params.userType }
         res.render('profile-posts', returnedData)
     } else {
         res.render('page-not-found')
@@ -63,9 +65,9 @@ async function deletePost(req, res) {
     let post = new Post(req.body)
     returnedData = await post.delete()
     if (returnedData.deletedCount) {
-        sessionSave(req, res, post.success, 'success', `/profile-posts/${req.body.author}`, false)
+        sessionSave(req, res, post.success, 'success', `/profile-posts/${req.body.author}/myPosts`, false)
     } else {
-        sessionSave(req, res, post.errors, 'errors', `/profile-posts/${req.body.author}`, false)
+        sessionSave(req, res, post.errors, 'errors', `/profile-posts/${req.body.author}/myPosts`, false)
     }
 }
 
@@ -75,7 +77,7 @@ async function searchPosts(req, res) {
     if (returnedData) {
         res.send(returnedData)
     } else {
-        console.log('Invalid data')        
+        console.log('Invalid data')
     }
 }
-module.exports = { createPost, savePost, viewPost, profilePosts, editPost, updatePost, deletePost, searchPosts}
+module.exports = { createPost, savePost, viewPost, profilePosts, editPost, updatePost, deletePost, searchPosts }

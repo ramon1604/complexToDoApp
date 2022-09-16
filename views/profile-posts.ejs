@@ -2,37 +2,42 @@
 
 <% if (user) { %><%- include('navLoggedin') %><% } else { %><%- include('navLoggedout') %><% } %>
 
-<div class="container py-md-5 container--narrow">
-  <%- include('flash') %>
-  <h2><img class="avatar-small" src="https://gravatar.com/avatar/<%= avatar %>?s=128"> <%= username %>
-    <% if (user._id != _id) { %>
-    <form class="ml-2 d-inline" action="/follow-author" method="POST">
-      <input type="text" name="authorId" value="<%= _id %>" hidden>
-      <input type="text" name="authorUsername" value="<%= username %>" hidden>
-      <button class="btn btn-primary btn-sm">Follow <i class="fas fa-user-plus"></i></button>
-    </form>
-    <form class="ml-2 d-inline" action="/unfollow-author" method="POST">
-      <input type="text" name="authorId" value="<%= _id %>" hidden>
-      <input type="text" name="authorUsername" value="<%= username %>" hidden>
-      <button class="btn btn-danger btn-sm">Stop Following <i class="fas fa-user-times"></i></button>
-    </form>
-    <% } %>
-  </h2>
+<%- include('profiles-header') %>
 
-  <div class="profile-nav nav nav-tabs pt-2 mb-4">
-    <a href="#" class="profile-nav-link nav-item nav-link active">Posts: <%= docsAuthor.length %></a>
-    <a href="#" class="profile-nav-link nav-item nav-link ">Followers: 3</a>
-    <a href="#" class="profile-nav-link nav-item nav-link ">Following: 2</a>
-  </div>
+<% if (urlParams.userType == "myPosts") { %>
+<div class="list-group">
+  <% posts.forEach((post) => { %>
+  <a href="/view-post/<%= post._id %>" class="list-group-item list-group-item-action">
+    <img class="avatar-tiny" src="https://gravatar.com/avatar/<%= post.postsUserData[0].avatar %>?s=128">
+    <span class="small mr-2 text-primary"><%= post.postsUserData[0].username %></span><strong><%= post.title %></strong> on <%= post.createdDate.toLocaleDateString("en-US",{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }) %>
+  </a>
+  <% }) %>
+</div>
+</div>
+<% } %>
 
+<% if (urlParams.userType == "followers") { %>
+<div class="list-group">
+  <% followers.forEach((follower) => { %>
+  <a href="/profile-posts/<%= follower.followersUserData[0]._id %>/myPosts" class="list-group-item list-group-item-action">
+    <img class="avatar-tiny" src="https://gravatar.com/avatar/<%= follower.followersUserData[0].avatar %>?s=128">
+    <span class="small mr-2 text-primary"><%= follower.followersUserData[0].username %></span>
+  </a>
+  <% }) %>
+</div>
+</div>
+<% } %>
+
+<% if (urlParams.userType == "followings") { %>
   <div class="list-group">
-    <% docsAuthor.forEach((post) => { %>
-    <a href="/view-post/<%= post._id %>" class="list-group-item list-group-item-action">
-      <img class="avatar-tiny" src="https://gravatar.com/avatar/<%= avatar %>?s=128">
-      <strong><%= post.title %></strong> on <%= post.createdDate.toLocaleDateString("en-US",{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }) %>
+    <% followings.forEach((following) => { %>
+    <a href="/profile-posts/<%= following.followingsUserData[0]._id %>/myPosts" class="list-group-item list-group-item-action">
+      <img class="avatar-tiny" src="https://gravatar.com/avatar/<%= following.followingsUserData[0].avatar %>?s=128">
+      <span class="small mr-2 text-primary"><%= following.followingsUserData[0].username %></span>
     </a>
     <% }) %>
   </div>
-</div>
+  </div>
+  <% } %>
 
 <%- include('footer') -%>

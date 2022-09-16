@@ -46,7 +46,7 @@ class Post {
                 return false
             }
         } catch (error) {
-            console.log('Could not save post')
+            console.log(error)
         }
     }
 
@@ -59,25 +59,38 @@ class Post {
             ]).toArray()
             return resultPost[0]
         } catch (error) {
-            console.log('Post not found')
+            console.log(error)
         }
     }
 
     async profile() {
         try {
+            let resultPosts
+            let resultFollowers
+            let resultFollowings
             if (!this.validId()) { return false }
-            const resultProfile = await db.collection("users").aggregate([
-                { $match: { _id: ObjectId(this.data._id) } },
-                {
-                    $lookup: {
-                        from: "posts", localField: "_id", foreignField: "author", as: "docsAuthor", pipeline:
-                            [{ $sort: { createdDate: -1 } }]
-                    }
-                }
+            resultPosts = await db.collection("posts").aggregate([
+                { $match: { author: ObjectId(this.data._id) } },
+                { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "postsUserData" } }
             ]).toArray()
-            return resultProfile[0]
+
+            resultFollowers = await db.collection("followers").aggregate([
+                { $match: { followingId: ObjectId(this.data._id) } },
+                { $lookup: { from: "users", localField: "followerId", foreignField: "_id", as: "followersUserData" } }
+            ]).toArray()
+
+            resultFollowings = await db.collection("followers").aggregate([
+                { $match: { followerId: ObjectId(this.data._id) } },
+                { $lookup: { from: "users", localField: "followingId", foreignField: "_id", as: "followingsUserData" } }
+            ]).toArray()
+
+            let results = []
+            results.posts = resultPosts
+            results.followers = resultFollowers
+            results.followings = resultFollowings
+            return results
         } catch (error) {
-            console.log('Post not found')
+            console.log(error)
         }
     }
 
@@ -87,7 +100,7 @@ class Post {
             const resultPost = await db.collection("posts").findOne(ObjectId(this.data._id))
             return resultPost
         } catch (error) {
-            console.log('Post not found')
+            console.log(error)
         }
     }
 
@@ -103,7 +116,7 @@ class Post {
             }
             return resultPost
         } catch (error) {
-            console.log('Post not found')
+            console.log(error)
         }
     }
 
@@ -118,7 +131,7 @@ class Post {
             }
             return resultPost
         } catch (error) {
-            console.log('Post not found')
+            console.log(error)
         }
     }
 
@@ -134,7 +147,7 @@ class Post {
                 return false
             }
         } catch (error) {
-            console.log('Post not found')
+            console.log(error)
         }
     }
 

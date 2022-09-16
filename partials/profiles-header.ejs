@@ -1,0 +1,39 @@
+<div class="container py-md-5 container--narrow">
+  <%- include('flash') %>
+  <a class="small font-weight-bold" href="javascript: history.back()">&laquo; Back </a>
+  <h2 class="mt-3"><img class="avatar-small" src="https://gravatar.com/avatar/<%= loggedUserData.avatar %>?s=128"> <%= user.username %>
+    <% if (loggedUserData._id != urlParams.id) { %>
+    <form class="ml-2 d-inline" action="/follow-author" method="POST">
+      <input type="text" name="followerId" value="<%= loggedUserData._id %>" hidden>
+      <input type="text" name="followingId" value="<%= urlParams.id %>" hidden>
+      <button class="btn btn-primary btn-sm">Follow <i class="fas fa-user-plus"></i></button>
+    </form>
+    <form class="ml-2 d-inline" action="/unfollow-author" method="POST">
+      <input type="text" name="followerId" value="<%= loggedUserData._id %>" hidden>
+      <input type="text" name="followingId" value="<%= urlParams.id %>" hidden>
+      <button class="btn btn-danger btn-sm">Stop Following <i class="fas fa-user-times"></i></button>
+    </form>
+    <% } %>
+  </h2>
+
+  <div class="profile-nav nav nav-tabs pt-2 mb-4">
+    <% if (urlParams.userType == "myPosts") { %>
+    <a href="/profile-posts/<%= loggedUserData._id %>/myPosts" class="profile-nav-link nav-item nav-link active">Posts: <%= posts.length %></a>
+    <% if (loggedUserData._id == urlParams.id) { %>
+    <a href="/profile-posts/<%= loggedUserData._id %>/followers" class="profile-nav-link nav-item nav-link ">Followers: <%= followers.length %></a>
+    <a href="/profile-posts/<%= loggedUserData._id %>/followings" class="profile-nav-link nav-item nav-link ">Following: <%= followings.length %></a>
+    <% }} %>
+    <% if (urlParams.userType == "followers") { %>
+    <a href="/profile-posts/<%= loggedUserData._id %>/myPosts" class="profile-nav-link nav-item nav-link">Posts: <%= posts.length %></a>
+    <% if (loggedUserData._id == urlParams.id) { %>
+    <a href="/profile-posts/<%= loggedUserData._id %>/followers" class="profile-nav-link nav-item nav-link active ">Followers: <%= followers.length %></a>
+    <a href="/profile-posts/<%= loggedUserData._id %>/followings" class="profile-nav-link nav-item nav-link ">Following: <%= followings.length %></a>
+    <% }} %>
+    <% if (urlParams.userType == "followings") { %>
+    <a href="/profile-posts/<%= loggedUserData._id %>/myPosts" class="profile-nav-link nav-item nav-link">Posts: <%= posts.length %></a>
+    <% if (loggedUserData._id == urlParams.id) { %>
+    <a href="/profile-posts/<%= loggedUserData._id %>/followers" class="profile-nav-link nav-item nav-link ">Followers: <%= followers.length %></a>
+    <a href="/profile-posts/<%= loggedUserData._id %>/followings" class="profile-nav-link nav-item nav-link active ">Following: <%= followings.length %></a>
+    <% }} %>
+
+  </div>

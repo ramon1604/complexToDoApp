@@ -9,34 +9,34 @@ class Follow {
     }
 
     async validateFollow(operation) {
-        if (this.data.authorId == this.data.followerId ) {
+        if (this.data.followingId == this.data.followerId) {
             this.errors.push(`You can not follow yourself.`)
             return false
         }
-        if (typeof (this.data.authorId) != "string" || !ObjectId.isValid(this.data.authorId)) {
+        if (typeof (this.data.followingId) != "string" || !ObjectId.isValid(this.data.followingId)) {
             return false
         } else {
-            const resultUsers = await db.collection("users").findOne(ObjectId(this.data.authorId))
-            if (resultUsers) {
-                const resultfollowers = await db.collection("followers").findOne({ authorId: ObjectId(this.data.authorId), followerId: ObjectId(this.data.followerId) })
+            const userFollowing = await db.collection("users").findOne({ _id: ObjectId(this.data.followingId) })
+            if (userFollowing) {
+                const resultfollowers = await db.collection("followers").findOne({ followingId: ObjectId(this.data.followingId), followerId: ObjectId(this.data.followerId) })
                 if (operation == 'follow') {
                     if (!resultfollowers) {
-                        return true
+                        return userFollowing.username
                     } else {
-                        this.errors.push(`Already Following ${this.data.authorUsername}`)
+                        this.errors.push(`Already Following ${userFollowing.username}`)
                         return false
                     }
                 } else {
                     if (resultfollowers) {
-                        return true
+                        return userFollowing.username
                     } else {
-                        this.errors.push(`Already not Following ${this.data.authorUsername}`)
+                        this.errors.push(`Already not Following ${userFollowing.username}`)
                         return false
                     }
                 }
 
             } else {
-                this.errors.push(`${this.data.authorUsername} does not exists`)
+                this.errors.push(`The follower you are searching does not exists`)
                 return false
             }
         }
@@ -44,9 +44,10 @@ class Follow {
 
     async follow() {
         try {
-            if (await this.validateFollow('follow')) {
-                const registerFollower = await db.collection("followers").insertOne({ authorId: ObjectId(this.data.authorId), followerId: ObjectId(this.data.followerId) })
-                this.success.push(`Successfully followed ${this.data.authorUsername}`)
+            let follower = await this.validateFollow('follow')
+            if (follower) {
+                const registerFollower = await db.collection("followers").insertOne({ followingId: ObjectId(this.data.followingId), followerId: ObjectId(this.data.followerId) })
+                this.success.push(`Successfully started following ${follower}`)
                 return registerFollower
             } else {
                 return false
@@ -59,9 +60,10 @@ class Follow {
 
     async unfollow() {
         try {
-            if (await this.validateFollow('unfollow')) {
-                const removeFollower = await db.collection("followers").deleteOne({ authorId: ObjectId(this.data.authorId), followerId: ObjectId(this.data.followerId) })
-                this.success.push(`Successfully remove following ${this.data.authorUsername}`)
+            let follower = await this.validateFollow('unfollow')
+            if (follower) {
+                const removeFollower = await db.collection("followers").deleteOne({ followingId: ObjectId(this.data.followingId), followerId: ObjectId(this.data.followerId) })
+                this.success.push(`Successfully stopped following ${follower}`)
                 return removeFollower
             } else {
                 return false

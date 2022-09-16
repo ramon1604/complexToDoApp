@@ -18,7 +18,7 @@ module.exports = {
     createPostRoute: router.get('/create-post', isLoggedin, createPost),
     savePostRoute: router.post('/create-post', isLoggedin, savePost),
     viewPostRoute: router.get('/view-post/:id', isLoggedin, viewPost),
-    profilePostsRoute: router.get('/profile-posts/:id', isLoggedin, profilePosts),
+    profilePostsRoute: router.get('/profile-posts/:id/:userType', isLoggedin, profilePosts),
     editPostRoute: router.post('/edit-post', isLoggedin, editPost),
     updatePostRoute: router.post('/update-post', isLoggedin, updatePost),
     deletePostRoute: router.post('/delete-post', isLoggedin, deletePost),
