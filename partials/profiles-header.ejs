@@ -17,23 +17,9 @@
   </h2>
 
   <div class="profile-nav nav nav-tabs pt-2 mb-4">
-    <% if (urlParams.userType == "myPosts") { %>
-    <a href="/profile-posts/<%= loggedUserData._id %>/myPosts" class="profile-nav-link nav-item nav-link active">Posts: <%= posts.length %></a>
+    <a href="/profile-posts/<%= loggedUserData._id %>/myPosts" class="profile-nav-link nav-item nav-link <%= urlParams.userType == "myPosts" ? "active" : "" %> ">Posts: <%= posts.length %></a>
     <% if (loggedUserData._id == urlParams.id) { %>
-    <a href="/profile-posts/<%= loggedUserData._id %>/followers" class="profile-nav-link nav-item nav-link ">Followers: <%= followers.length %></a>
-    <a href="/profile-posts/<%= loggedUserData._id %>/followings" class="profile-nav-link nav-item nav-link ">Following: <%= followings.length %></a>
-    <% }} %>
-    <% if (urlParams.userType == "followers") { %>
-    <a href="/profile-posts/<%= loggedUserData._id %>/myPosts" class="profile-nav-link nav-item nav-link">Posts: <%= posts.length %></a>
-    <% if (loggedUserData._id == urlParams.id) { %>
-    <a href="/profile-posts/<%= loggedUserData._id %>/followers" class="profile-nav-link nav-item nav-link active ">Followers: <%= followers.length %></a>
-    <a href="/profile-posts/<%= loggedUserData._id %>/followings" class="profile-nav-link nav-item nav-link ">Following: <%= followings.length %></a>
-    <% }} %>
-    <% if (urlParams.userType == "followings") { %>
-    <a href="/profile-posts/<%= loggedUserData._id %>/myPosts" class="profile-nav-link nav-item nav-link">Posts: <%= posts.length %></a>
-    <% if (loggedUserData._id == urlParams.id) { %>
-    <a href="/profile-posts/<%= loggedUserData._id %>/followers" class="profile-nav-link nav-item nav-link ">Followers: <%= followers.length %></a>
-    <a href="/profile-posts/<%= loggedUserData._id %>/followings" class="profile-nav-link nav-item nav-link active ">Following: <%= followings.length %></a>
-    <% }} %>
-
+    <a href="/profile-posts/<%= loggedUserData._id %>/followers" class="profile-nav-link nav-item nav-link <%= urlParams.userType == "followers" ? "active" : "" %> ">Followers: <%= followers.length %></a>
+    <a href="/profile-posts/<%= loggedUserData._id %>/followings" class="profile-nav-link nav-item nav-link <%= urlParams.userType == "followings" ? "active" : "" %> ">Following: <%= followings.length %></a>
+    <% } %>
   </div>

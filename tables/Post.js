@@ -69,25 +69,25 @@ class Post {
             let resultFollowers
             let resultFollowings
             if (!this.validId()) { return false }
-            resultPosts = await db.collection("posts").aggregate([
+            resultPosts = db.collection("posts").aggregate([
                 { $match: { author: ObjectId(this.data._id) } },
                 { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "postsUserData" } }
             ]).toArray()
 
-            resultFollowers = await db.collection("followers").aggregate([
+            resultFollowers = db.collection("followers").aggregate([
                 { $match: { followingId: ObjectId(this.data._id) } },
                 { $lookup: { from: "users", localField: "followerId", foreignField: "_id", as: "followersUserData" } }
             ]).toArray()
 
-            resultFollowings = await db.collection("followers").aggregate([
+            resultFollowings = db.collection("followers").aggregate([
                 { $match: { followerId: ObjectId(this.data._id) } },
                 { $lookup: { from: "users", localField: "followingId", foreignField: "_id", as: "followingsUserData" } }
             ]).toArray()
-
             let results = []
-            results.posts = resultPosts
-            results.followers = resultFollowers
-            results.followings = resultFollowings
+            let [rPosts, rFollowers, rFollowings] = await Promise.all([resultPosts, resultFollowers, resultFollowings])
+            results.posts = rPosts
+            results.followers = rFollowers
+            results.followings = rFollowings
             return results
         } catch (error) {
             console.log(error)
