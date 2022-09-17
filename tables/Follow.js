@@ -16,18 +16,19 @@ class Follow {
         if (typeof (this.data.followingId) != "string" || !ObjectId.isValid(this.data.followingId)) {
             return false
         } else {
-            const userFollowing = await db.collection("users").findOne({ _id: ObjectId(this.data.followingId) })
+            const userF = db.collection("users").findOne({ _id: ObjectId(this.data.followingId) })
+            const resultF = db.collection("followers").findOne({ followingId: ObjectId(this.data.followingId), followerId: ObjectId(this.data.followerId) })
+            let [userFollowing, resultFollowers] = await Promise.all([userF, resultF])
             if (userFollowing) {
-                const resultfollowers = await db.collection("followers").findOne({ followingId: ObjectId(this.data.followingId), followerId: ObjectId(this.data.followerId) })
                 if (operation == 'follow') {
-                    if (!resultfollowers) {
+                    if (!resultFollowers) {
                         return userFollowing.username
                     } else {
                         this.errors.push(`Already Following ${userFollowing.username}`)
                         return false
                     }
                 } else {
-                    if (resultfollowers) {
+                    if (resultFollowers) {
                         return userFollowing.username
                     } else {
                         this.errors.push(`Already not Following ${userFollowing.username}`)

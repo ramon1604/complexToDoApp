@@ -65,23 +65,26 @@ class Post {
 
     async profile() {
         try {
-            let resultPosts
-            let resultFollowers
-            let resultFollowings
             if (!this.validId()) { return false }
-            resultPosts = db.collection("posts").aggregate([
+            const resultPosts = db.collection("posts").aggregate([
                 { $match: { author: ObjectId(this.data._id) } },
-                { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "postsUserData" } }
+                { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "postsUserData" } },
+                {$unwind : "$postsUserData" },
+                {$sort: {"title": 1}},
             ]).toArray()
 
-            resultFollowers = db.collection("followers").aggregate([
+            const resultFollowers = db.collection("followers").aggregate([
                 { $match: { followingId: ObjectId(this.data._id) } },
-                { $lookup: { from: "users", localField: "followerId", foreignField: "_id", as: "followersUserData" } }
+                { $lookup: { from: "users", localField: "followerId", foreignField: "_id", as: "followersUserData" } },
+                {$unwind : "$followersUserData" },
+                {$sort: {"followersUserData.username": 1}},
             ]).toArray()
 
-            resultFollowings = db.collection("followers").aggregate([
+            const resultFollowings = db.collection("followers").aggregate([
                 { $match: { followerId: ObjectId(this.data._id) } },
-                { $lookup: { from: "users", localField: "followingId", foreignField: "_id", as: "followingsUserData" } }
+                { $lookup: { from: "users", localField: "followingId", foreignField: "_id", as: "followingsUserData" } },
+                {$unwind : "$followingsUserData" },
+                {$sort: {"followingsUserData.username": 1}},
             ]).toArray()
             let results = []
             let [rPosts, rFollowers, rFollowings] = await Promise.all([resultPosts, resultFollowers, resultFollowings])
