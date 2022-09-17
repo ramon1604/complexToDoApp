@@ -67,13 +67,13 @@ class Post {
         try {
             if (!this.validId()) { return false }
             let results = []
-            const resultPosts = db.collection("posts").aggregate([
-                { $match: { author: ObjectId(this.data._id) } },
-                { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "postsUserData" } },
-                { $unwind: "$postsUserData" },
-                { $sort: { "title": 1 } },
-            ]).toArray()
             if (this.data.userType == "myPosts") {
+                const resultPosts = db.collection("posts").aggregate([
+                    { $match: { author: ObjectId(this.data._id) } },
+                    { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "postsUserData" } },
+                    { $unwind: "$postsUserData" },
+                    { $sort: { "title": 1 } },
+                ]).toArray()
                 const resultFollowers = db.collection("followers").aggregate([
                     { $match: { followingId: ObjectId(this.data._id) } },
                     { $lookup: { from: "users", localField: "followerId", foreignField: "_id", as: "followersUserData" } },
