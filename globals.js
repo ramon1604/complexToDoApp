@@ -18,6 +18,10 @@ let connectDb = (async () => {
   //console.log(indexes)
 })
 
+// Globals for followers and followings
+global.rgbFollowers = []
+global.rgbFollowings = []
+
 //Load session from MongoDb
 const session = require('express-session')
 const MongoStore = require('connect-mongo')

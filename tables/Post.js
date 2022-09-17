@@ -66,31 +66,39 @@ class Post {
     async profile() {
         try {
             if (!this.validId()) { return false }
+            let results = []
             const resultPosts = db.collection("posts").aggregate([
                 { $match: { author: ObjectId(this.data._id) } },
                 { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "postsUserData" } },
-                {$unwind : "$postsUserData" },
-                {$sort: {"title": 1}},
+                { $unwind: "$postsUserData" },
+                { $sort: { "title": 1 } },
             ]).toArray()
+            if (this.data.userType == "myPosts") {
+                const resultFollowers = db.collection("followers").aggregate([
+                    { $match: { followingId: ObjectId(this.data._id) } },
+                    { $lookup: { from: "users", localField: "followerId", foreignField: "_id", as: "followersUserData" } },
+                    { $unwind: "$followersUserData" },
+                    { $sort: { "followersUserData.username": 1 } },
+                ]).toArray()
 
-            const resultFollowers = db.collection("followers").aggregate([
-                { $match: { followingId: ObjectId(this.data._id) } },
-                { $lookup: { from: "users", localField: "followerId", foreignField: "_id", as: "followersUserData" } },
-                {$unwind : "$followersUserData" },
-                {$sort: {"followersUserData.username": 1}},
-            ]).toArray()
-
-            const resultFollowings = db.collection("followers").aggregate([
-                { $match: { followerId: ObjectId(this.data._id) } },
-                { $lookup: { from: "users", localField: "followingId", foreignField: "_id", as: "followingsUserData" } },
-                {$unwind : "$followingsUserData" },
-                {$sort: {"followingsUserData.username": 1}},
-            ]).toArray()
-            let results = []
-            let [rPosts, rFollowers, rFollowings] = await Promise.all([resultPosts, resultFollowers, resultFollowings])
-            results.posts = rPosts
-            results.followers = rFollowers
-            results.followings = rFollowings
+                const resultFollowings = db.collection("followers").aggregate([
+                    { $match: { followerId: ObjectId(this.data._id) } },
+                    { $lookup: { from: "users", localField: "followingId", foreignField: "_id", as: "followingsUserData" } },
+                    { $unwind: "$followingsUserData" },
+                    { $sort: { "followingsUserData.username": 1 } },
+                ]).toArray()
+                let [rPosts, rFollowers, rFollowings] = await Promise.all([resultPosts, resultFollowers, resultFollowings])
+                results.posts = rPosts
+                results.followers = rFollowers
+                results.followings = rFollowings
+                rgbFollowers = rFollowers
+                rgbFollowings = rFollowings
+            } else {
+                let [rPosts] = await Promise.all([resultPosts])
+                results.posts = rPosts
+                results.followers = rgbFollowers
+                results.followings = rgbFollowings
+            }
             return results
         } catch (error) {
             console.log(error)
