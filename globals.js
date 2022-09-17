@@ -18,7 +18,8 @@ let connectDb = (async () => {
   //console.log(indexes)
 })
 
-// Globals for followers and followings
+// Globals for Posts, followers and followings
+global.rgbPosts = []
 global.rgbFollowers = []
 global.rgbFollowings = []
 

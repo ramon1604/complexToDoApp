@@ -91,11 +91,11 @@ class Post {
                 results.posts = rPosts
                 results.followers = rFollowers
                 results.followings = rFollowings
+                rgbPosts = rPosts
                 rgbFollowers = rFollowers
                 rgbFollowings = rFollowings
             } else {
-                let [rPosts] = await Promise.all([resultPosts])
-                results.posts = rPosts
+                results.posts = rgbPosts
                 results.followers = rgbFollowers
                 results.followings = rgbFollowings
             }
