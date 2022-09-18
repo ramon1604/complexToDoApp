@@ -4,10 +4,23 @@
 
 <div class="container py-md-5 container--narrow">
   <%- include('flash') %>
-  <div class="text-center">
-    <h2>Hello <strong><%= user.username %></strong>, your feed is empty.</h2>
-    <p class="lead text-muted">Your feed displays the latest posts from the people you follow. If you don&rsquo;t have any friends to follow that&rsquo;s okay; you can use the &ldquo;Search&rdquo; feature in the top menu bar to find content written by people with similar interests and then follow them.</p>
+
+  <% if (posts) { %>
+  <h2 class="text-center mb-4" >My Followings Latest Post</h2>  
+  <div class="list-group">
+    <% posts.forEach((post) => { %>
+    <a href="/view-post/<%= post._id %>" class="list-group-item list-group-item-action">
+      <img class="avatar-tiny" src="https://gravatar.com/avatar/<%= post.postsUserData.avatar %>?s=128">
+      <span class="small mr-2 text-primary"><%= post.postsUserData.username %></span><strong><%= post.title %></strong> on <%= post.createdDate.toLocaleDateString("en-US",{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }) %>
+    </a>
+    <% }) %>
   </div>
 </div>
-
+<% } else { %>
+<div class="text-center">
+  <h2>Hello <strong><%= user.username %></strong>, your feed is empty.</h2>
+  <p class="lead text-muted">Your feed displays the latest posts from the people you follow. If you don&rsquo;t have any friends to follow that&rsquo;s okay; you can use the &ldquo;Search&rdquo; feature in the top menu bar to find content written by people with similar interests and then follow them.</p>
+</div>
+</div>
+<% } %>
 <%- include('footer') -%>

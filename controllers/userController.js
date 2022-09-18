@@ -7,7 +7,9 @@ async function home(req, res) {
         if (res.locals.user.acknowledged) {
             res.redirect('/logout')
         } else {
-            res.render('home-dashboard')
+            let user = new User()
+            const resultPosts = await user.getFollowingUsersPosts(res.locals.user._id)
+            res.render('home-dashboard', resultPosts)
         }
     } else {
         res.render('home-guest', { regErrors: req.flash('regErrors') })

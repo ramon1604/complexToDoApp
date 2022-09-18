@@ -2,7 +2,7 @@
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const md5 = require('md5')
-
+const ObjectId = require('mongodb').ObjectId
 class User {
     constructor(data) {
         this.data = data
@@ -76,6 +76,22 @@ class User {
     getAvatar() {
         this.avatar = md5(this.data.email)
         this.data.avatar = this.avatar
+    }
+
+    async getFollowingUsersPosts(id) {
+        const followers = await db.collection("followers").find({ followerId: ObjectId(id) }).toArray()
+        let followersId = followers.map((data) => {
+            return data.followingId
+        })
+        const resultPosts = await db.collection("posts").aggregate([
+            { $match: { author: {$in: followersId} } },
+            { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "postsUserData" } },
+            { $unwind: "$postsUserData" },
+            { $sort: { "createdDate": -1 } },
+        ]).toArray()
+        let results = []
+        results.posts = resultPosts
+        return results
     }
 }
 
