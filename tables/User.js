@@ -106,7 +106,7 @@ class User {
 
     async username() {
         try {
-            const result = await db.collection("users").find({ username: this.data.username }).toArray()
+            const result = await db.collection("users").find(this.data).toArray()
             return result
         } catch (error) {
             console.log(error)
