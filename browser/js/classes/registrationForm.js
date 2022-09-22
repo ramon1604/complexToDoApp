@@ -29,7 +29,8 @@ class RegistrationForm {
         this.username.error = false
         this.username.min = 4
         this.username.len = 20
-        this.immediately(this.username, /[^a-z0-9]+/gi, true)
+        this.username.regex = new RegExp("[^a-z0-9]+", "gi")
+        this.immediately(this.username, this.username.regex, true)
         clearTimeout(this.username.timer)
         this.username.timer = setTimeout(() => this.afterDelay('username', this.username), 2000)
     }
@@ -38,7 +39,8 @@ class RegistrationForm {
         this.email.error = false
         this.email.min = 10
         this.email.len = 100
-        this.immediately(this.email, /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/gi, false)
+        this.email.regex = new RegExp("\\S+@\\S+\\.\\S+", "gi")
+        this.immediately(this.email,this.email.regex, false)
         clearTimeout(this.email.timer)
         this.email.timer = setTimeout(() => this.afterDelay('email', this.email), 2000)
     }
@@ -100,7 +102,7 @@ class RegistrationForm {
     async sendRequest(lbl, el) {
         let obj = {}
         obj[lbl] = el.value
-        let response = await axios.post(`/users-username`, obj)
+        let response = await axios.post(`/users-validation`, obj)
         if (response.data.length) {
             return response.data[0][lbl]
         } else {

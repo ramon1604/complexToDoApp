@@ -104,7 +104,7 @@ class User {
         }
     }
 
-    async username() {
+    async validation() {
         try {
             const result = await db.collection("users").find(this.data).toArray()
             return result

@@ -55,10 +55,10 @@ async function logout(req, res) {
     }
 }
 
-async function usersUsername(req, res) {
+async function usersValidation(req, res) {
     let user = new User(req.body)
-    let returnedData = await user.username()
+    let returnedData = await user.validation()
     res.json(returnedData)
 }
 
-module.exports = { logout, login, register, home, usersUsername }
+module.exports = { logout, login, register, home, usersValidation }
