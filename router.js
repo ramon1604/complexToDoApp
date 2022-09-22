@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const path = require('path')
-const { home, register, login, logout } = require(path.join(appRoot, 'controllers/userController'))
+const { home, register, login, logout, usersUsername } = require(path.join(appRoot, 'controllers/userController'))
 const { createPost, savePost, viewPost, profilePosts, editPost, updatePost, deletePost, searchPosts } = require(path.join(appRoot, 'controllers/postController'))
 const { followAuthor, unfollowAuthor } = require(path.join(appRoot, 'controllers/followController'))
 const { isLoggedin } = require(path.join(appRoot, 'server/sessions'))
@@ -13,6 +13,7 @@ module.exports = {
     loginRoute: router.post('/login', login),
     logoutRoute: router.post('/logout', logout),
     logoutRoute2: router.get('/logout', logout),
+    usernameRoute: router.post('/users-username', usersUsername),
 
     // Posts related routes
     createPostRoute: router.get('/create-post', isLoggedin, createPost),

@@ -4,7 +4,7 @@ class RegistrationForm {
         this.insertValidationElements()
         this.username = document.querySelector("#username-register")
         this.username.previousValue = ""
-        this.errors = []
+        this.username.errors = {}
         this.events()
     }
 
@@ -22,9 +22,9 @@ class RegistrationForm {
     }
 
     usernameHandler() {
-        this.errors.usernameIm = this.usernameImmediately()
+        this.username.errors.Im = this.usernameImmediately()
         clearTimeout(this.username.timer)
-        this.username.timer = setTimeout(() => this.errors.usernameAf = this.usernameAfterDelay(), 1000)
+        this.username.timer = setTimeout(() => this.username.errors.Af = this.usernameAfterDelay(), 2000)
     }
 
     usernameImmediately() {
@@ -35,12 +35,17 @@ class RegistrationForm {
         }
     }
 
-    usernameAfterDelay() {
-        if (this.errors.usernameIm) { return false }
+    async usernameAfterDelay() {
+        if (this.username.errors.Im) { return false }
         if (this.username.value != "" && this.username.value.length <= 4) {
             return this.showError(this.username, "Must contain more than 4 characters")
         } else {
-            return this.hideError(this.username)
+            let username = await this.sendRequest()
+            if (username == this.username.value && username != '') {
+                return this.showError(this.username, `${username} is already taken.`)
+            } else {
+                return this.hideError(this.username)
+            }
         }
     }
 
@@ -66,6 +71,15 @@ class RegistrationForm {
         this.allFields.forEach((el) => {
             el.insertAdjacentHTML('beforebegin', '<div class="alert alert-danger small liveValidateMessage w-100 text-center"></div>')
         })
+    }
+
+    async sendRequest() {
+        let response = await axios.post('/users-username', { username: this.username.value })
+        if (response.data.length) {
+            return response.data[0].username
+        } else {
+            return ''
+        }
     }
 
 }

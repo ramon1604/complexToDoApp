@@ -75,7 +75,7 @@ async function searchPosts(req, res) {
     let post = new Post(req.body)
     returnedData = await post.search()
     if (returnedData) {
-        res.send(returnedData)
+        res.json(returnedData)
     } else {
         console.log('Invalid data')
     }

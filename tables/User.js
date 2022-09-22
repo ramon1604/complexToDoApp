@@ -24,22 +24,26 @@ class User {
     }
 
     async validate() {
-        if (this.data.username == "") { this.errors.push('Username required.') }
-        if (this.data.username != "" && !validator.isAlphanumeric(this.data.username)) { this.errors.push('Username may only contain letters and numbers.') }
-        if (!validator.isEmail(this.data.email)) { this.errors.push('Valid email required.') }
-        if (this.data.password == "") { this.errors.push('Password required.') }
-        if (this.data.password.length > 0 && this.data.password.length <= 8) { this.errors.push('Password must be greater than 8 characters.') }
-        if (this.data.password.length > 30) { this.errors.push('Password can not exceed 30 characters and contain letters and numbers.') }
-        if (this.data.username.length > 0 && this.data.username.length <= 4) { this.errors.push('Username must be greater than 4 characters.') }
-        if (this.data.username.length > 20) { this.errors.push('Username can not exceed 20 characters.') }
-        if (!this.errors.length) {
-            const userExists = await db.collection("users").findOne({ username: this.data.username })
-            if (userExists) { this.errors.push('Username already taken.') }
-            const emailExists = await db.collection("users").findOne({ email: this.data.email })
-            if (emailExists) { this.errors.push('Email already taken.') }
+        try {
+            if (this.data.username == "") { this.errors.push('Username required.') }
+            if (this.data.username != "" && !validator.isAlphanumeric(this.data.username)) { this.errors.push('Username may only contain letters and numbers.') }
+            if (!validator.isEmail(this.data.email)) { this.errors.push('Valid email required.') }
+            if (this.data.password == "") { this.errors.push('Password required.') }
+            if (this.data.password.length > 0 && this.data.password.length <= 8) { this.errors.push('Password must be greater than 8 characters.') }
+            if (this.data.password.length > 30) { this.errors.push('Password can not exceed 30 characters and contain letters and numbers.') }
+            if (this.data.username.length > 0 && this.data.username.length <= 4) { this.errors.push('Username must be greater than 4 characters.') }
+            if (this.data.username.length > 20) { this.errors.push('Username can not exceed 20 characters.') }
+            if (!this.errors.length) {
+                const userExists = await db.collection("users").findOne({ username: this.data.username })
+                if (userExists) { this.errors.push('Username already taken.') }
+                const emailExists = await db.collection("users").findOne({ email: this.data.email })
+                if (emailExists) { this.errors.push('Email already taken.') }
+            }
+        } catch (error) {
+            console.log(error)
         }
-
     }
+
     async register() {
         try {
             this.cleanUp()
@@ -58,6 +62,7 @@ class User {
             console.log(error)
         }
     }
+
     async login() {
         try {
             this.cleanUp()
@@ -73,25 +78,39 @@ class User {
             console.log(error)
         }
     }
+
     getAvatar() {
         this.avatar = md5(this.data.email)
         this.data.avatar = this.avatar
     }
 
     async getFollowingUsersPosts(id) {
-        const followers = await db.collection("followers").find({ followerId: ObjectId(id) }).toArray()
-        let followersId = followers.map((data) => {
-            return data.followingId
-        })
-        const resultPosts = await db.collection("posts").aggregate([
-            { $match: { author: {$in: followersId} } },
-            { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "postsUserData" } },
-            { $unwind: "$postsUserData" },
-            { $sort: { "createdDate": -1 } },
-        ]).toArray()
-        let results = []
-        results.posts = resultPosts
-        return results
+        try {
+            const followers = await db.collection("followers").find({ followerId: ObjectId(id) }).toArray()
+            let followersId = followers.map((data) => {
+                return data.followingId
+            })
+            const resultPosts = await db.collection("posts").aggregate([
+                { $match: { author: { $in: followersId } } },
+                { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "postsUserData" } },
+                { $unwind: "$postsUserData" },
+                { $sort: { "createdDate": -1 } },
+            ]).toArray()
+            let results = []
+            results.posts = resultPosts
+            return results
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async username() {
+        try {
+            const result = await db.collection("users").find({ username: this.data.username }).toArray()
+            return result
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
 

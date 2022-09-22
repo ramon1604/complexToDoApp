@@ -55,4 +55,10 @@ async function logout(req, res) {
     }
 }
 
-module.exports = { logout, login, register, home }
+async function usersUsername(req, res) {
+    let user = new User(req.body)
+    let returnedData = await user.username()
+    res.json(returnedData)
+}
+
+module.exports = { logout, login, register, home, usersUsername }
