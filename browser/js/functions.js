@@ -17,3 +17,14 @@ async function alertMsg(title, text, icon, buttons, mode, formId) {
             }
         )
 }
+
+async function alertExit(title, text, icon, button, mode) {
+    await swal(
+        {
+            title: title,
+            text: text,
+            icon: icon,
+            button: button,
+            dangerMode: mode
+        })
+}
