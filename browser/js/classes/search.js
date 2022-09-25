@@ -1,6 +1,7 @@
 class Search {
   constructor() {
     this.injectHTML()
+    this.csrf = csrf
     this.headerSearchIcon = document.querySelector('.header-search-icon')
     this.overlay = document.querySelector('.search-overlay')
     this.closeIcon = document.querySelector('.close-live-search')
@@ -39,7 +40,7 @@ class Search {
   }
 
   async sendRequest() {
-    let response = await axios.post('/search-posts', { searchTXT: this.inputField.value })
+    let response = await axios.post('/search-posts', { searchTXT: this.inputField.value, _csrf: this.csrf })
     this.renderResultsHTML(response.data)
     this.hideLoaderIcon()
     this.showResultsArea()

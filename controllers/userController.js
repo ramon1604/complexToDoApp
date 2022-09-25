@@ -56,6 +56,7 @@ async function logout(req, res) {
 }
 
 async function usersValidation(req, res) {
+    delete req.body._csrf
     let user = new User(req.body)
     let returnedData = await user.validation()
     res.json(returnedData)

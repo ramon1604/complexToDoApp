@@ -1,7 +1,7 @@
 <body>
     <header class="header-bar mb-3">
       <div class="container d-flex flex-column flex-md-row align-items-center p-3">
-        <h4 class="my-0 mr-md-auto font-weight-normal"><a href="/" class="text-white"><img src="/img/logo.png" class="img-responsive" style="max-width: 20%"> OurApp</a></h4>
+        <h4 class="my-0 mr-md-auto font-weight-normal"><a href="/" class="text-white"><img src="/img/logo.png" class="img-responsive" style="max-width: 10%"> OurApp</a></h4>
         <form action="/login" method="POST" class="mb-0 pt-2 pt-md-0">
           <div class="row align-items-center">
             <div class="col-md mr-0 pr-md-0 mb-3 mb-md-0">
@@ -11,6 +11,7 @@
               <input name="password" class="form-control form-control-sm input-dark" type="password" placeholder="Password">
             </div>
             <div class="col-md-auto">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>" >
               <button class="btn btn-primary btn-sm">Sign In</button>
             </div>
           </div>

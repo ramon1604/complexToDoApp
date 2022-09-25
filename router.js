@@ -6,7 +6,8 @@ const { createPost, savePost, viewPost, profilePosts, editPost, updatePost, dele
 const { followAuthor, unfollowAuthor } = require(path.join(appRoot, 'controllers/followController'))
 const { isLoggedin } = require(path.join(appRoot, 'server/sessions'))
 
-module.exports = {
+
+ module.exports = {
     // Users related routes
     homeRoute: router.get('/', home),
     registerRoute: router.post('/register', register),

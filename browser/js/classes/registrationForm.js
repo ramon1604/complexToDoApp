@@ -1,5 +1,6 @@
 class RegistrationForm {
     constructor() {
+        this.csrf = csrf
         this.registrationForm = document.querySelector('#registration-form')
         this.allFields = document.querySelectorAll("#registration-form .form-control")
         this.insertValidationElements()
@@ -26,6 +27,24 @@ class RegistrationForm {
         })
 
         this.password.addEventListener('keyup', () => {
+            this.keyHandler(this.password, this.passwordHandler)
+            this.password.im = "Letters, numbers, !@#_- and Length up to 50 characters"
+            this.password.af = "Must contain more than 8 characters"
+        })
+
+        this.username.addEventListener('blur', () => {
+            this.keyHandler(this.username, this.usernameHandler)
+            this.username.im = "Allowed letters, numbers and up to 20 characters"
+            this.username.af = "Must contain more than 4 characters"
+        })
+
+        this.email.addEventListener('blur', () => {
+            this.keyHandler(this.email, this.emailHandler)
+            this.email.im = "Not a valid email or Length above 100 characters"
+            this.email.af = "Must contain more than 10 characters"
+        })
+
+        this.password.addEventListener('blur', () => {
             this.keyHandler(this.password, this.passwordHandler)
             this.password.im = "Letters, numbers, !@#_- and Length up to 50 characters"
             this.password.af = "Must contain more than 8 characters"
@@ -73,7 +92,7 @@ class RegistrationForm {
 
     // Common methods
     formSubmitHandler(usr, email, pass) {
-        if (!usr.value && !email.value && !pass.value) {
+        if (!usr.value || !email.value || !pass.value) {
             alertExit('Invalid Registration Data', 'Click [Exit] button', 'error', 'Exit', true)
         } else {
             if (!usr.error && !email.error && !pass.error) {
@@ -142,6 +161,7 @@ class RegistrationForm {
     async sendRequest(lbl, el) {
         let obj = {}
         obj[lbl] = el.value
+        obj["_csrf"] = this.csrf
         let response = await axios.post(`/users-validation`, obj)
         if (response.data.length) {
             return response.data[0][lbl]

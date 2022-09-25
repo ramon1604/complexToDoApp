@@ -11,10 +11,12 @@
     <span class="pt-2">
       <form class="edit-post-form d-inline" action="/edit-post" method="POST">
         <input type="text" name="_id" value="<%= _id %>" hidden>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" >
         <button class="edit-post-button text-primary" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></button>
       </form>
       <form id="delForm" class="delete-post-form d-inline" action="/delete-post" method="POST">
         <input type="text" name="_id" value="<%= _id %>" hidden>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <button type="button" onclick="alertMsg('Warning','Click [Ok] button to delete post.','error',true,true,'delForm')" class="delete-post-button text-danger" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash"></i></button>
       </form>
     </span>
@@ -22,8 +24,8 @@
   </div>
 
   <p class="text-muted small mb-4">
-    <a href="/profile-posts/<%= docAuthor[0]._id %>/myPosts" ><img class="avatar-tiny" src="https://gravatar.com/avatar/<%= docAuthor[0].avatar %>?s=128"></a>
-    Posted by <a href="/profile-posts/<%= docAuthor[0]._id %>/myPosts" ><%= docAuthor[0].username %></a> on <%= createdDate.toLocaleDateString("en-US",{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }) %>
+    <a href="/profile-posts/<%= docAuthor[0]._id %>/myPosts"><img class="avatar-tiny" src="https://gravatar.com/avatar/<%= docAuthor[0].avatar %>?s=128"></a>
+    Posted by <a href="/profile-posts/<%= docAuthor[0]._id %>/myPosts"><%= docAuthor[0].username %></a> on <%= createdDate.toLocaleDateString("en-US",{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }) %>
   </p>
 
   <div class="body-content">

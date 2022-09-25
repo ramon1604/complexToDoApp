@@ -16,6 +16,7 @@
       <textarea oninput="enaBtn('updBtn')" required name="body" id="post-body" class="body-content tall-textarea form-control" type="text"><%= body %></textarea>
     </div>
     <input type="text" name="_id" value="<%= _id %>" hidden>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" >
     <button id="updBtn" class="btn btn-primary" disabled>Save Updates</button>
   </form>
 </div>

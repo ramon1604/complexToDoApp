@@ -6,11 +6,13 @@
     <form class="ml-2 d-inline" action="/follow-author" method="POST">
       <input type="text" name="followerId" value="<%= loggedUserData._id %>" hidden>
       <input type="text" name="followingId" value="<%= urlParams.id %>" hidden>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <button class="btn btn-primary btn-sm">Follow <i class="fas fa-user-plus"></i></button>
     </form>
     <form class="ml-2 d-inline" action="/unfollow-author" method="POST">
       <input type="text" name="followerId" value="<%= loggedUserData._id %>" hidden>
       <input type="text" name="followingId" value="<%= urlParams.id %>" hidden>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <button class="btn btn-danger btn-sm">Stop Following <i class="fas fa-user-times"></i></button>
     </form>
     <% } %>

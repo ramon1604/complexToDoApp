@@ -1,5 +1,8 @@
 // Modules
+const csrf = require('csurf')
 const express = require('express')
+
+// Create express app
 const app = express()
 const path = require('path')
 const sanitizeHTML = require('sanitize-html')
@@ -11,13 +14,11 @@ require(path.join(__dirname, 'globals'))
 app.use(sessionOptions)
 app.use(flashOpts)
 
-//Load locals variables
-app.use((req, res, next) => {
-  res.locals.user = req.session.user
-  res.locals.errors = req.flash('errors')
-  res.locals.success = req.flash('success')
-  next()
-})
+// Load sessionSave function
+const { sessionSave } = require(path.join(appRoot, 'server/sessions'))
+
+//Load router
+const router = require(path.join(appRoot, 'router'))
 
 // Browser files
 app.use(express.static(path.join(appRoot, 'browser')))
@@ -29,10 +30,29 @@ app.set('view engine', 'ejs')
 // Utils
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
+app.use(csrf())
+
+//Load locals variables
+app.use((req, res, next) => {
+  res.locals.user = req.session.user
+  res.locals.errors = req.flash('errors')
+  res.locals.success = req.flash('success')
+  res.locals.csrfToken = req.csrfToken()
+  next()
+})
 
 // Home Route
-const { homeRoute } = require(path.join(appRoot, 'router'))
-app.use('/', homeRoute)
+app.use('/', router.homeRoute)
+
+app.use(async (err, req, res, next) => {
+  if (err) {
+    if (err.code == "EBADCSRFTOKEN") {
+      await sessionSave(req, res, ['Forgery detected.'], 'errors', '/', false)
+    } else {
+      console.log(err)
+    }
+  }
+})
 
 // Listen for socket connection
 const server = require('http').createServer(app)
@@ -42,10 +62,10 @@ io.use((socket, next) => {
 })
 io.on('connection', (socket) => {
   if (socket.request.session.user) {
-     let loggedUser = []
-     loggedUser = socket.request.session.user
-     socket.emit('loggedUser', loggedUser)
-     socket.on('chatMsgFromBrowser', (data) => {
+    let loggedUser = []
+    loggedUser = socket.request.session.user
+    socket.emit('loggedUser', loggedUser)
+    socket.on('chatMsgFromBrowser', (data) => {
       data.user = socket.request.session.user
       socket.broadcast.emit('chatMsgFromServer', { message: sanitizeHTML(data.message), user: data.user })
     })
