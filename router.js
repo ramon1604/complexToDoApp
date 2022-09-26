@@ -13,7 +13,6 @@ const { isLoggedin } = require(path.join(appRoot, 'server/sessions'))
     registerRoute: router.post('/register', register),
     loginRoute: router.post('/login', login),
     logoutRoute: router.post('/logout', logout),
-    logoutRoute2: router.get('/logout', logout),
     usernameRoute: router.post('/users-validation', usersValidation),
 
     // Posts related routes
