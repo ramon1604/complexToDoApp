@@ -13,14 +13,23 @@ require(path.join(__dirname, 'globals'))
 // Load sessionSave function
 const { sessionSave } = require(path.join(appRoot, 'server/sessions'))
 
-// Load router
+// Load router.js
 const router = require(path.join(appRoot, 'router'))
 
-// Load Middleware
-app.use(sessionOptions)
-app.use(flashOpts)
+// Load Middleware for router.js and router-api.js
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
+
+// Load router-api.js
+const apiRouter = require(path.join(appRoot, 'router-api'))
+
+// API route-api.js
+app.use('/api', apiRouter.apiGetRoute)
+app.use('/api', apiRouter.apiPostRoute)
+
+// Load Middleware for router.js
+app.use(sessionOptions)
+app.use(flashOpts)
 app.use(csrf())
 
 // Browser files
@@ -50,7 +59,7 @@ app.use(async (err, req, res, next) => {
   next()
 })
 
-// Home Route
+// Home route.js
 app.use('/', router.homeRoute)
 
 // Listen for socket connection

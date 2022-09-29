@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken')
+
 function sessionSave(req, res, msgs, msgType, redirect, data) {
     if (msgs === 'ok') { '' } else { req.flash(msgType, msgs) }
     if (data) {
@@ -16,4 +18,13 @@ function isLoggedin(req, res, next) {
     }
 }
 
-module.exports = { sessionSave, isLoggedin }
+function apiIsLoggedin(req, res, next) {
+    try {
+        req.apiUser = jwt.verify(req.body.token, process.env.JWTSECRET)
+        next()
+    } catch (error) {
+       res.json(error) 
+    }
+}
+
+module.exports = { sessionSave, isLoggedin, apiIsLoggedin }
