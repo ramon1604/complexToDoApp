@@ -32,6 +32,20 @@ class apiPost {
             console.log(error)
         }
     }
+
+
+    async postsByAuthorId() {
+        try {
+            if (typeof (this.data) != "string" || !ObjectId.isValid(this.data)) {
+                return false
+            }
+            const resultPost = await db.collection("posts").find({ author: new ObjectId(this.data) }).toArray()
+            return resultPost
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
+
 
 module.exports = apiPost

@@ -34,4 +34,18 @@ async function apiDeletePost(req, res) {
     }
 }
 
-module.exports = { apiCreatePost, apiDeletePost }
+async function apiPostsByAuthorId(req, res) {
+    try {
+        let apiPost = new APIPost(req.params.authorId)
+        let result = await apiPost.postsByAuthorId()
+        if (result) {
+            res.json(result)
+        } else {
+            res.json('Could not retrieve posts by authorId.')
+        }
+    } catch (error) {
+        res.json(error)
+    }
+}
+
+module.exports = { apiCreatePost, apiDeletePost, apiPostsByAuthorId }
