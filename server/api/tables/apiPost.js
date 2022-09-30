@@ -23,6 +23,15 @@ class apiPost {
             return error
         }
     }
+
+    async delete() {
+        try {
+            const deletedPost = await db.collection("posts").deleteOne({ _id: new ObjectId(this.data._id), author: new ObjectId(this.data.author) })
+            return deletedPost
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
 
 module.exports = apiPost

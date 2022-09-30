@@ -7,7 +7,7 @@ async function apiCreatePost(req, res) {
         let apiPost = new APIPost(req.body)
         delete req.body.token
         req.body.author = req.apiUser._id
-        result = await apiPost.create()
+        let result = await apiPost.create()
         if (result.acknowledged) {
             res.json('success')
         } else {
@@ -18,4 +18,20 @@ async function apiCreatePost(req, res) {
     }
 }
 
-module.exports = { apiCreatePost }
+async function apiDeletePost(req, res) {
+    try {
+        let apiPost = new APIPost(req.body)
+        delete req.body.token
+        req.body.author = req.apiUser._id
+        let result = await apiPost.delete()
+        if (result.deletedCount) {
+            res.json('success')
+        } else {
+            res.json('Could not delete post.')
+        }
+    } catch (error) {
+        res.json(error)
+    }
+}
+
+module.exports = { apiCreatePost, apiDeletePost }
