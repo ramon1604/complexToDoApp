@@ -1,5 +1,5 @@
 const path = require('path')
-const Post = require(path.join(appRoot, 'tables/post'))
+const Post = require(path.join(appRoot, 'tables/Post'))
 const { sessionSave } = require(path.join(appRoot, 'server/sessions'))
 
 async function createPost(req, res) {
