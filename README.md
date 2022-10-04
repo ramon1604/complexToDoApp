@@ -1,4 +1,7 @@
 
+IF YOU WANT TO BECOME A FULL STACK JAVASCRIPT DEVELOPER THIS IS A PERFECT EXAMPLE TO FOLLOW IN YOUR TRAINING.
+<hr>
+
 1- Created mainly to implement new object tools in node js and express(server) and also in the web browser (client side.)<br>
 2- Basic usage of socket.io in a chat service<br>
 3- Implementation of classes in web browser using ES6 technologies which allows to do the same as using a bunch of modules in node but
