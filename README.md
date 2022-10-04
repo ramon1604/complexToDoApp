@@ -51,5 +51,5 @@ IF YOU WANT TO BECOME A FULL STACK JAVASCRIPT DEVELOPER THIS IS A PERFECT EXAMPL
    
  Sample App: <a href="https://complextodoapp.herokuapp.com/" target="_blank" >OurApp | Sign In </a>
     
-    
+ My email: ramoncott@hotmail.com    
     
