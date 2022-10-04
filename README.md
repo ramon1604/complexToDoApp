@@ -3,7 +3,7 @@
 2- Basic usage of socket.io in a chat service<br>
 3- Implementation of classes in web browser using ES6 technologies which allows to do the same as using a bunch of modules in node but
    without the need of that.<br>
-4- It use MongoDB as a NOSQL DATABASE and the idea is to keep everything under javascript.<br>
+4- It uses MongoDB as a NOSQL DATABASE and the idea is to keep everything under javascript.<br>
 
    WHAT IS THE APPLICATION
    <hr>
