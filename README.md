@@ -24,7 +24,7 @@
       "password":"yourpass"
     }
     
-    This will return a token:<br>
+    This will return a token:
     {
       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzA1NWQwZDlhMWU4MDkzYmMwNjNhZTMiLCJpYXQiOjE2NjQ4OTU3MDQsImV4cCI6MTY2NzQ4NzcwNH0.cUn1Tl3Z2oi1qyfC-_2wBP8hwhCMu458IstMnFcMv_U"
     }
@@ -39,8 +39,8 @@
       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzA1NWQwZDlhMWU4MDkzYmMwNjNhZTMiLCJpYXQiOjE2NjQ1NTE2MjgsImV4cCI6MTY2NzE0MzYyOH0.zrSmt6ZELGAnHHPyb-6WQTsOvdeDYMp8hJNf7EyQqwE"
     }
     
-    This will return: <br>
-    "success"<br>
+    This will return:
+    "success"
     
     If POST is created.
     
